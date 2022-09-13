@@ -1,38 +1,53 @@
 .App {
-  text-align: center;
+    text-align: center;
+    width: 800px;
+    height: 600px;
+    background-color: var(--color-bg);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:1rem 2rem;
+    background-color: var(--color-footer);
+    position: fixed;
+    width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.navbar .navbarTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+.navbar .links .link, .navbar .links .activeLink {
+    text-decoration: none;
+    font-size: 1rem;
+    text-transform: uppercase;
+    transition: 300ms;
+    cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+.navbar .links .link:nth-child(1), .navbar .links .activeLink:nth-child(1) {
+    margin-right: 2rem;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.navbar .links .activeLink {
+    color: var(--color-subtext);
+    transition: 300ms;
+}
+
+.navbar .links .link {
+    color: white;
+    transition: 300ms;
+}
+
+.navbar .links .link:hover {
+    color: var(--color-subtext);
+    transition: 300ms;
+}
+
+.content {
+    padding-top: calc(64px + 20px);
 }
