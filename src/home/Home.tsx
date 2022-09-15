@@ -50,8 +50,6 @@ function onEndEvent() {
 
 function Home() {
 
-    let result = "";
-
     recognition.onstart = onStartEvent
 
     recognition.onerror = onErrorEvent
