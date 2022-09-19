@@ -1,4 +1,4 @@
-import {Assignment} from "../models/assignment";
+import {Assignment, Components} from "../models/assignment";
 
 // communication specific
 export const EXTENSION_ID = chrome.i18n.getMessage("@@extension_id");
@@ -13,6 +13,7 @@ export const ASSISTANT_NAME = 'Chrome';
 export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 export const ASSIGNMENTS: Assignment[] = [{
     request: 'wie geht es dir',
-    response: 'Danke für die Nachfrage. Mir geht es gut.'
+    response: 'Danke für die Nachfrage. Mir geht es gut.',
+    component: Components.NO_COMPONENT
 }];
 
