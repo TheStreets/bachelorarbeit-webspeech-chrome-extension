@@ -1,10 +1,10 @@
 export interface Assignment{
     request: string;
     response: string;
-    component: Components;
+    component: Component;
 }
 
-export enum Components {
+export enum Component {
     NO_COMPONENT,
     INPUT_FILLER_COMPONENT
 }
