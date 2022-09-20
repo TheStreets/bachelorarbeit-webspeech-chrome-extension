@@ -6,6 +6,7 @@ import {InputElement} from "../models/InputElement";
 import {CONTENT_SCRIPT_ID} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import InputFillComponent from "../components/InputFillComponent";
+import {Component} from "../models/assignment";
 import Port = chrome.runtime.Port;
 
 const root = document.createElement('div');
@@ -45,7 +46,7 @@ function getInputFields() {
 
 const App: React.FC<{}> = () => {
     const [text, setText] = useState("");
-    const [component, setComponent] = useState("");
+    const [component, setComponent] = useState(Component.NO_COMPONENT);
 
     function setupCommunication() {
         port = chrome.runtime.connect({name: CONTENT_SCRIPT_ID});
@@ -61,19 +62,24 @@ const App: React.FC<{}> = () => {
         function handleIncomingMessages(message: Message, port: Port) {
             console.log('Port: ', port.name);
             if (message.type === MessageType.COMMUNICATION_ESTABLISHED) {
-                setComponent("no_component");
-                console.log('Setting no component ');
-            } else if (message.type === MessageType.COMMAND_NO_COMPONENT) {
-                setComponent("input_helper");
-                console.log('Setting input_helper ');
+                setComponent(Component.NO_COMPONENT);
+            } else if (message.type === MessageType.COMMAND_CALL) {
+                const msgValue: Component = message.message;
+                if (msgValue === Component.NO_COMPONENT) {
+                    setComponent(Component.NO_COMPONENT);
+                } else if (msgValue === Component.INPUT_FILLER_COMPONENT) {
+                    setComponent(Component.INPUT_FILLER_COMPONENT);
+                    console.log('Setting input_helper');
+                }
             }
         }
     }, [component]);
 
     return (
         <>
-            {component === 'no_component' && <Box>some text</Box>}
-            {component === 'input_helper' && <InputFillComponent inputFields={getInputFields()} text={text}/>}
+            {component === Component.NO_COMPONENT &&
+                <Box sx={{position: 'fixed', top: '20%', left: '20%', fontSize: '3rem', color: 'red'}}>some text</Box>}
+            {component === Component.INPUT_FILLER_COMPONENT && <InputFillComponent inputFields={getInputFields()} text={text}/>}
         </>
     )
 }
