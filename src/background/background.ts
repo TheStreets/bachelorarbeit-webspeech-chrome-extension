@@ -70,14 +70,10 @@ function setupCommunication(tabId: number) {
 }
 
 function handleIncomingMessages(message: Message, port: Port) {
-    if (port.name === BACKGROUND_ID) {
-        if (message.type === MessageType.RECOGNITION_STARTED) {
-            console.log('Message received: ', message);
-        } else if (message.type === MessageType.COMMAND_CALL) {
-            checkCommand(message.message, port);
-        }
-    } else if (port.name === CONTENT_SCRIPT_ID) {
-
+    if (message.type === MessageType.RECOGNITION_STARTED) {
+        console.log('Message received: ', message);
+    } else if (message.type === MessageType.COMMAND_CALL) {
+        checkCommand(message.message, port);
     }
 }
 
@@ -97,7 +93,7 @@ function handleAssignment(assignment: string, port: Port) {
         console.log('Todo: ', todo);
         if (assignment.startsWith(todo.request.toLowerCase())) {
             console.log('Handling Response');
-            const msg:Message = {message: "", type: MessageType.COMMAND_NO_COMPONENT}
+            const msg: Message = {message: todo.component, type: MessageType.COMMAND_CALL}
             port.postMessage(msg);
             handleResponse(todo.response.toLowerCase());
             break;
