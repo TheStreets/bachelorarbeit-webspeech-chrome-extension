@@ -5,6 +5,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter} from "react-router-dom";
+import {ThemeProvider} from "@mui/material";
+import {theme} from "./utils/custome-theme";
 
 const rootElement = document.createElement('div') as HTMLElement;
 document.body.appendChild(rootElement);
@@ -14,9 +16,11 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <BrowserRouter>
-        <App/>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+    </ThemeProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
