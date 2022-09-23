@@ -19,6 +19,7 @@
     "clipboardRead",
     "clipboardWrite",
     "desktopCapture",
+    "geolocation",
     "search",
     "tts"
   ]
