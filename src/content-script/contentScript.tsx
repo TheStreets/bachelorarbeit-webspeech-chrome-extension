@@ -48,37 +48,15 @@ const App: React.FC<{}> = () => {
     const [text, setText] = useState("");
     const [component, setComponent] = useState(Component.NO_COMPONENT);
 
-    function setupCommunication() {
-        port = chrome.runtime.connect({name: CONTENT_SCRIPT_ID});
-        const msg: Message = {message: "", type: MessageType.SETUP_COMMUNICATION};
-        port.postMessage(msg);
-    }
-
-    setupCommunication();
 
     useEffect(() => {
-        port.onMessage.addListener(handleIncomingMessages);
 
-        function handleIncomingMessages(message: Message, port: Port) {
-            console.log('Port: ', port.name);
-            if (message.type === MessageType.COMMUNICATION_ESTABLISHED) {
-                setComponent(Component.NO_COMPONENT);
-            } else if (message.type === MessageType.COMMAND_CALL) {
-                const msgValue: Component = message.message;
-                if (msgValue === Component.NO_COMPONENT) {
-                    setComponent(Component.NO_COMPONENT);
-                } else if (msgValue === Component.INPUT_FILLER_COMPONENT) {
-                    setComponent(Component.INPUT_FILLER_COMPONENT);
-                    console.log('Setting input_helper');
-                }
-            }
-        }
     }, [component]);
 
     return (
         <>
             {component === Component.NO_COMPONENT &&
-                <Box sx={{position: 'fixed', top: '20%', left: '20%', fontSize: '3rem', color: 'red'}}>some text</Box>}
+                <Box sx={{position: 'fixed', top: '20%', left: '20%', fontSize: '3rem', color: 'red'}}></Box>}
             {component === Component.INPUT_FILLER_COMPONENT && <InputFillComponent inputFields={getInputFields()} text={text}/>}
         </>
     )
