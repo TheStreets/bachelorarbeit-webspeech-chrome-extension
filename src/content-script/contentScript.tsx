@@ -3,11 +3,9 @@ import ReactDOM from 'react-dom';
 import './contentScript.css';
 import Box from "@mui/material/Box";
 import {InputElement} from "../models/InputElement";
-import {CONTENT_SCRIPT_ID} from "../utils/utils";
-import {Message, MessageType} from "../models/Message";
 import InputFillComponent from "../components/InputFillComponent";
 import {Component} from "../models/assignment";
-import Port = chrome.runtime.Port;
+
 
 const root = document.createElement('div');
 let port: any = null;
