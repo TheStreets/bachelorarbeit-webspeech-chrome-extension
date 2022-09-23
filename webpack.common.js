@@ -40,7 +40,7 @@ module.exports = {
     entry: {
         index: path.resolve(__dirname, 'src', 'index.tsx'),
         background: path.resolve(__dirname, 'src', 'background', 'background.ts'),
-        contentScript: path.resolve(__dirname, 'src', 'content-script', 'contentScript.ts'),
+        contentScript: path.resolve(__dirname, 'src', 'content-script', 'contentScript.tsx'),
     },
     module: {
         rules: [

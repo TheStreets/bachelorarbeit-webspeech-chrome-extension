@@ -1,83 +1,124 @@
 import "./Home.css";
 import {Message, MessageType} from "../models/Message";
+import {BACKGROUND_ID, COMMANDS, CONTENT_SCRIPT_ID} from "../utils/utils";
+import Port = chrome.runtime.Port;
+import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
+import Box from "@mui/material/Box";
+import {
+    Button,
+    Divider,
+    SvgIcon,
+    TextField,
+    Typography
+} from "@mui/material";
+import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
+import {CommandosTable} from "../components/CommandosComponent";
 
-const recognition = setupSpeechRecognition();
 
-function checkCommand(message: string) {
-    if (message === 'Hallo Assistent') {
-        chrome.tts.speak("Hallo Meister");
-    }
-}
-
-function setupSpeechRecognition() {
-    // @ts-ignore
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.mozSpeechRecognition || window.SpeechRecognition;
-    // @ts-ignore
-    const recognition = new window.SpeechRecognition();
-    recognition.lang = "de_DE";
-    recognition.maxAlternatives = 1;
-    recognition.interimResults = false;
-    recognition.continuous = true;
-    return recognition;
-}
-
-function onStartEvent() {
-    console.log('Recognition started');
-}
-
-function onErrorEvent(event: any) {
-    console.log('Recognition Error');
-}
-
-function onResultEvent(event: any) {
-    let result = "";
-    console.log('Recognition OnResult');
-    // loop over all results
-    for (let i = 0; i < event.results.length; ++i) {
-        // check if result is end result
-        if (event.results[i].isFinal) {
-            result += event.results[i][0].transcript;
-            checkCommand(result);
+function setupCommunication() {
+    // connection with the background.js
+    chrome.runtime.onConnect.addListener(function (connection: Port) {
+        if (connection.name === CONTENT_SCRIPT_ID) {
+            connection.onMessage.addListener(function (message) {
+                if (message.type === MessageType.SETUP_COMMUNICATION) {
+                    const msg: Message = {message: "", type: MessageType.COMMUNICATION_ESTABLISHED}
+                    connection.postMessage(msg);
+                }
+            });
         }
-    }
-    console.log('Result: ', result);
+        if (connection.name === BACKGROUND_ID) {
+            connection.onMessage.addListener(function (message) {
+                if (message.type === MessageType.START_RECOGNITION) {
+                    console.log('Received Message: ', message);
+                    const msg: Message = {
+                        message: "",
+                        type: MessageType.RECOGNITION_STARTED
+                    }
+                    connection.postMessage(msg);
+                } else if (message.type === MessageType.COMMAND_CALL) {
+
+                }
+            });
+        }
+    });
 }
 
-function onEndEvent() {
-    console.log('Recognition onEnd');
-    recognition.start();
-}
 
 function Home() {
 
-    let result = "";
+    const {
+        transcript,
+        isMicrophoneAvailable,
+        listening
+    } = useSpeechRecognition({commands: COMMANDS});
 
-    recognition.onstart = onStartEvent
-
-    recognition.onerror = onErrorEvent
-
-    recognition.onresult = onResultEvent
-
-    recognition.onend = onEndEvent
-
-    chrome.runtime.onConnect.addListener(function (connection) {
-        connection.onMessage.addListener(function (message) {
-            if (message.type === MessageType.START_RECOGNITION) {
-                console.log('Received Message: ', message);
-                recognition.start();
-                const msg: Message = {
-                    message: "",
-                    type: MessageType.RECOGNITION_STARTED
-                }
-                connection.postMessage(msg);
-            }
-        });
-    });
+    function startRecognition(event) {
+        if (!isMicrophoneAvailable) {
+            SpeechRecognition.startListening({continuous: true, language: 'de_DE'});
+        }
+    }
 
     return (
-        <div>
-            <h1>Homepage works</h1>
-        </div>
+        <Box paddingX={"2rem"}>
+            <Box paddingY={"1rem"}>
+                <>
+                    {listening &&
+                        <Typography variant="h5" component="h2" style={{textAlign: 'center', color: 'white'}}>
+                            Die Aufnahme ist gestartet. Sie können nun die Kommandos benutzen.
+                        </Typography>
+                    }
+                    {!listening &&
+                        <Typography variant="h5" component="h2" style={{textAlign: 'center', color: 'white'}}>
+                            Damit diese Chrome App einwandfrei arbeiten kann, werden Mikrofonrechte benötigt.
+                            Bitte bestätigen Sie diese Rechte in dem Sie auf den Button klicken.
+                        </Typography>
+                    }
+                </>
+                <Box paddingTop={"2rem"} paddingBottom={"1rem"}>
+                    <Button variant="contained"
+                            disabled={!!(listening)}
+                            onClick={startRecognition}>Aufnahme starten</Button>
+                </Box>
+                <Box paddingY={".5rem"}>
+                    <SvgIcon component={KeyboardVoiceIcon} style={
+                        (listening) ? {
+                            color: 'green',
+                            fontSize: 40
+                        } : {
+                            color: 'red',
+                            fontSize: 40
+                        }
+                    }/>
+                </Box>
+            </Box>
+            <Divider/>
+            <Box paddingY={"1rem"}>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Ihr Gesprochenes</Typography>
+                <Box paddingTop={"1rem"}>
+                    <TextField
+                        id="outlined-multiline-static"
+                        multiline
+                        rows={10}
+                        maxRows={10}
+                        value={transcript}
+                        variant="filled"
+                        className={"bachelor-arbeit-chrome-extension-textarea"}
+                    />
+                </Box>
+            </Box>
+            <Divider/>
+            <Box paddingY={"1rem"}>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Kommandos</Typography>
+                <Box>
+                    <Typography color={"secondary"}>
+                        Jeder Befehl startet mit diesen Worten: Hallo Chrome
+                    </Typography>
+                </Box>
+                <Box paddingTop={"1rem"}>
+                    <CommandosTable/>
+                </Box>
+            </Box>
+        </Box>
     );
 }
 
