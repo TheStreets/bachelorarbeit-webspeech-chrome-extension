@@ -1,9 +1,6 @@
 import {Message, MessageType} from "../models/Message";
 import {
-    ASSIGNMENTS,
-    ASSISTANT_WAKEUP_COMMAND,
     BACKGROUND_ID,
-    CONTENT_SCRIPT_ID,
     EXTENSION_ID,
     getExtensionUrl
 } from "../utils/utils";
@@ -73,36 +70,6 @@ function handleIncomingMessages(message: Message, port: Port) {
     if (message.type === MessageType.RECOGNITION_STARTED) {
         console.log('Message received: ', message);
     } else if (message.type === MessageType.COMMAND_CALL) {
-        checkCommand(message.message, port);
-    }
-}
 
-function checkCommand(message: string, port: Port) {
-    console.log('Checking message: ', message)
-    if (message.startsWith(ASSISTANT_WAKEUP_COMMAND)) {
-        const assignment = message.split(ASSISTANT_WAKEUP_COMMAND)[1].trim();
-        console.log(assignment)
-        handleAssignment(assignment.toLowerCase(), port);
     }
-}
-
-function handleAssignment(assignment: string, port: Port) {
-    console.log('Checking assignment: ', assignment)
-    for (let i = 0; i < ASSIGNMENTS.length; i++) {
-        const todo = ASSIGNMENTS[i];
-        console.log('Todo: ', todo);
-        if (assignment.startsWith(todo.request.toLowerCase())) {
-            console.log('Handling Response');
-            const msg: Message = {message: todo.component, type: MessageType.COMMAND_CALL}
-            port.postMessage(msg);
-            handleResponse(todo.response.toLowerCase());
-            break;
-        }
-    }
-    // handleResponse('Es tut mir leid. Ich bin nicht in der Lage Ihnen zu helfen.');
-}
-
-function handleResponse(response: string) {
-    console.log('Speaking response: ', response);
-    chrome.tts.speak(response);
 }
