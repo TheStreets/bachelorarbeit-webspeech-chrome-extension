@@ -59,3 +59,25 @@ export function buildCurrentWeatherResponse(weatherElements: WeatherElement[], c
     }
     return sentence;
 }
+
+export function buildWeatherResponseForToday(weatherElements: WeatherElement[], minTemp, maxTemp): string {
+    let sentence = '';
+    if (weatherElements.length === 0) {
+        sentence = `Heute werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} erreicht`;
+    } else if (weatherElements.length === 1) {
+        sentence = `Heute wird es hauptsächlich ${weatherElements[0].description} sein. Es werden dabei Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} erreicht`;
+    } else {
+        sentence = 'Heute wird es '
+        for (let i = 0; i < weatherElements.length; i++) {
+            const condition = weatherElements[i].description;
+            console.log('Cond: ', condition);
+            if (i === weatherElements.length){
+                // last element
+                sentence +=  'und ' + condition + ` sein. Dabei werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} erreicht`;
+            } else {
+                sentence += condition + ', ';
+            }
+        }
+    }
+    return sentence;
+}
