@@ -1,6 +1,12 @@
 import "./Home.css";
 import {Message, MessageType} from "../models/Message";
-import {BACKGROUND_ID, COMMANDS, CONTENT_SCRIPT_ID} from "../utils/utils";
+import {
+    ASSISTANT_WAKEUP_COMMAND,
+    BACKGROUND_ID, buildCurrentWeatherResponse,
+    CONTENT_SCRIPT_ID,
+    fetchWeather,
+    getCurrentLocation
+} from "../utils/utils";
 import Port = chrome.runtime.Port;
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import Box from "@mui/material/Box";
@@ -46,17 +52,74 @@ function setupCommunication() {
 
 function Home() {
 
+    const commands = [
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`,
+            callback: (command) => {
+                console.log(command);
+                chrome.tts.speak('Danke für die Nachfrage. Mir geht es gut.');
+            }
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} lösche den Text`,
+            callback: ({resetTranscript}) => {
+                resetTranscript();
+            }
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`,
+            callback: () => {
+                // logging
+                // get geolocation
+                getCurrentLocation().then(position => {
+                    console.log(position);
+                    // todo fetch data from the api
+                    if (position) {
+                        fetchWeather(position.coords.latitude, position.coords.longitude)
+                            .then(weather => {
+                                console.log('Weather: ', weather);
+                                const response = buildCurrentWeatherResponse(weather.current.weather, weather.current.temp);
+                                chrome.tts.speak(response);
+                            })
+                            .catch(error => {
+                                console.log('Error calling weather api: ', error)
+                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+                            });
+                    }
+                }).catch(error => {
+                    const errors = {
+                        1: "Keine Berechtigung erteilt",
+                        2: "Etwas ist schief gegangen",
+                        3: "Die Anfrage hat zu lange gedauert"
+                    }
+                    console.log(errors[error]);
+                });
+            }
+        }
+    ]
+
     const {
         transcript,
         isMicrophoneAvailable,
-        listening
-    } = useSpeechRecognition({commands: COMMANDS});
+        listening,
+        browserSupportsSpeechRecognition,
+        resetTranscript
+    } = useSpeechRecognition({commands: commands});
+
+    if (!browserSupportsSpeechRecognition) {
+        return (
+            <Box>
+                <Typography variant={"h1"} component={"h1"}>Der Browser ist nicht geeignet Sprache zu erkennen.</Typography>
+            </Box>
+        );
+    }
 
     function startRecognition(event) {
         if (!isMicrophoneAvailable) {
-            SpeechRecognition.startListening({continuous: true, language: 'de_DE'});
+            SpeechRecognition.startListening({continuous: true, language: 'de_DE', interimResults: false});
         }
     }
+
 
     return (
         <Box paddingX={"2rem"}>
