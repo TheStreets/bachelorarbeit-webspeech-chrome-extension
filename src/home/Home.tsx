@@ -2,9 +2,14 @@ import "./Home.css";
 import {Message, MessageType} from "../models/Message";
 import {
     ASSISTANT_WAKEUP_COMMAND,
-    BACKGROUND_ID, buildCurrentWeatherResponse, buildCurrentWeatherResponseForCity, buildWeatherResponseForToday,
+    BACKGROUND_ID,
+    buildCurrentWeatherResponse,
+    buildCurrentWeatherResponseForCity,
+    buildWeatherResponseForToday,
+    buildWeatherResponseForTodayByCity,
     CONTENT_SCRIPT_ID,
-    fetchWeather, fetchWeatherByCity,
+    fetchWeather,
+    fetchWeatherByCity,
     getCurrentLocation
 } from "../utils/utils";
 import Port = chrome.runtime.Port;
@@ -130,6 +135,21 @@ function Home() {
                     .then(weather => {
                         console.log('Weather: ', weather);
                         const response = buildCurrentWeatherResponseForCity(city, weather.weather, weather.main.temp);
+                        chrome.tts.speak(response);
+                    })
+                    .catch(error => {
+                        console.log('Error calling weather api: ', error)
+                        chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+                    });
+            }
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute in *`,
+            callback: (city) => {
+                fetchWeatherByCity(city)
+                    .then(weather => {
+                        console.log('Weather: ', weather);
+                        const response = buildWeatherResponseForTodayByCity(city, weather.weather, weather.main.temp_min, weather.main.temp_max);
                         chrome.tts.speak(response);
                     })
                     .catch(error => {
