@@ -4,22 +4,9 @@ import {Navigate, NavLink, Route, Routes} from "react-router-dom";
 import Home from "./home/Home";
 import Config from "./config/Config";
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
-import {COMMANDS} from "./utils/utils";
-import Box from "@mui/material/Box";
 
 
 function App() {
-    const {
-        browserSupportsSpeechRecognition
-    } = useSpeechRecognition({commands: COMMANDS});
-
-    if (!browserSupportsSpeechRecognition) {
-        return (
-            <Box>
-                <h1>Browser doesn't support speech recognition.</h1>
-            </Box>
-        );
-    }
 
     SpeechRecognition.startListening({continuous: true, language: 'de_DE'});
 
