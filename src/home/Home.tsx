@@ -2,7 +2,7 @@ import "./Home.css";
 import {Message, MessageType} from "../models/Message";
 import {
     ASSISTANT_WAKEUP_COMMAND,
-    BACKGROUND_ID, buildCurrentWeatherResponse,
+    BACKGROUND_ID, buildCurrentWeatherResponse, buildWeatherResponseForToday,
     CONTENT_SCRIPT_ID,
     fetchWeather,
     getCurrentLocation
@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandosTable} from "../components/CommandosComponent";
+import {useState} from "react";
 
 
 function setupCommunication() {
@@ -95,7 +96,35 @@ function Home() {
                     console.log(errors[error]);
                 });
             }
-        }
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`,
+            callback: () => {
+                getCurrentLocation().then(position => {
+                    console.log(position);
+                    // todo fetch data from the api
+                    if (position) {
+                        fetchWeather(position.coords.latitude, position.coords.longitude)
+                            .then(weather => {
+                                console.log('Weather: ', weather);
+                                const response = buildWeatherResponseForToday(weather.daily[0].weather, weather.daily[0].temp.min, weather.daily[0].temp.max);
+                                chrome.tts.speak(response);
+                            })
+                            .catch(error => {
+                                console.log('Error calling weather api: ', error)
+                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+                            });
+                    }
+                }).catch(error => {
+                    const errors = {
+                        1: "Keine Berechtigung erteilt",
+                        2: "Etwas ist schief gegangen",
+                        3: "Die Anfrage hat zu lange gedauert"
+                    }
+                    console.log(errors[error]);
+                });
+            }
+        },
     ]
 
     const {
@@ -105,6 +134,8 @@ function Home() {
         browserSupportsSpeechRecognition,
         resetTranscript
     } = useSpeechRecognition({commands: commands});
+
+    const [recognizedText, setRecognizedText] = useState(transcript);
 
     if (!browserSupportsSpeechRecognition) {
         return (
@@ -119,7 +150,6 @@ function Home() {
             SpeechRecognition.startListening({continuous: true, language: 'de_DE', interimResults: false});
         }
     }
-
 
     return (
         <Box paddingX={"2rem"}>
