@@ -1,7 +1,7 @@
 import {Message, MessageType} from "../models/Message";
 import {
     BACKGROUND_ID,
-    EXTENSION_ID,
+    EXTENSION_ID, getCurrentLocation,
     getExtensionUrl
 } from "../utils/utils";
 import Tab = chrome.tabs.Tab;
@@ -47,11 +47,11 @@ chrome.action.onClicked.addListener((tab) => {
                 function (tabArray: Tab[]) {
                     for (let i in tabArray) {
                         if (tabArray[i].url === getExtensionUrl()) {
-                            const connection = setupCommunication(tabArray[i].id as number);
-                            connection.postMessage(message);
-                            connection.onMessage.addListener(function (message, port) {
-                                handleIncomingMessages(message, port);
-                            });
+                            // const connection = setupCommunication(tabArray[i].id as number);
+                            // connection.postMessage(message);
+                            // connection.onMessage.addListener(function (message, port) {
+                            //     handleIncomingMessages(message, port);
+                            // });
                         }
                     }
                 }
