@@ -62,7 +62,7 @@ function Home() {
             }
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} lösche den Text`,
+            command: `${ASSISTANT_WAKEUP_COMMAND} vergiss dein Gedächtnis`,
             callback: ({resetTranscript}) => {
                 resetTranscript();
             }
