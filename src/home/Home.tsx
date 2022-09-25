@@ -2,9 +2,9 @@ import "./Home.css";
 import {Message, MessageType} from "../models/Message";
 import {
     ASSISTANT_WAKEUP_COMMAND,
-    BACKGROUND_ID, buildCurrentWeatherResponse, buildWeatherResponseForToday,
+    BACKGROUND_ID, buildCurrentWeatherResponse, buildCurrentWeatherResponseForCity, buildWeatherResponseForToday,
     CONTENT_SCRIPT_ID,
-    fetchWeather,
+    fetchWeather, fetchWeatherByCity,
     getCurrentLocation
 } from "../utils/utils";
 import Port = chrome.runtime.Port;
@@ -74,7 +74,6 @@ function Home() {
                 // get geolocation
                 getCurrentLocation().then(position => {
                     console.log(position);
-                    // todo fetch data from the api
                     if (position) {
                         fetchWeather(position.coords.latitude, position.coords.longitude)
                             .then(weather => {
@@ -102,7 +101,6 @@ function Home() {
             callback: () => {
                 getCurrentLocation().then(position => {
                     console.log(position);
-                    // todo fetch data from the api
                     if (position) {
                         fetchWeather(position.coords.latitude, position.coords.longitude)
                             .then(weather => {
@@ -123,6 +121,21 @@ function Home() {
                     }
                     console.log(errors[error]);
                 });
+            }
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter in *`,
+            callback: (city) => {
+                fetchWeatherByCity(city)
+                    .then(weather => {
+                        console.log('Weather: ', weather);
+                        const response = buildCurrentWeatherResponseForCity(city, weather.weather, weather.main.temp);
+                        chrome.tts.speak(response);
+                    })
+                    .catch(error => {
+                        console.log('Error calling weather api: ', error)
+                        chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+                    });
             }
         },
     ]
