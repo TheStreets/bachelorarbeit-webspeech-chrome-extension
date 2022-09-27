@@ -8,7 +8,7 @@ export const CONTENT_SCRIPT_ID = `${EXTENSION_ID}/contentScript`;
 export const BACKGROUND_ID = `${EXTENSION_ID}/backgroundScript`;
 
 // recognition specific
-export const ASSISTANT_NAME = 'Chrome';
+export const ASSISTANT_NAME = 'nami';
 export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 
 export function getExtensionUrl() {
