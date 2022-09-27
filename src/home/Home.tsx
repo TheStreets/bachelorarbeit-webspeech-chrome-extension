@@ -26,6 +26,9 @@ import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandosTable} from "../components/CommandosComponent";
 import {useState} from "react";
 
+function speak(text: string) {
+    chrome.tts.speak(text)
+}
 
 function setupCommunication() {
     // connection with the background.js
@@ -55,6 +58,100 @@ function setupCommunication() {
     });
 }
 
+/**
+ * @param position as geolocation
+ * @param type: possible values 'current', 'today', 'forCast'
+ * */
+function getWeatherByBrowserLocation(position, type: string): any {
+    if (type === 'current') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                const response = buildCurrentWeatherResponse(weather.current.weather, weather.current.temp);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'today') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForToday(weather.daily[0].weather, weather.daily[0].temp.min, weather.daily[0].temp.max);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'forCast') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForNextThreeDays(weather.daily[1], weather.daily[2], weather.daily[3]);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    }
+}
+
+/**
+ * * @param type: possible values 'current', 'today', 'forCast'
+ * */
+function handleWeatherRequestByBrowserLocation(type: string) {
+    getCurrentLocation().then(position => {
+        console.log(position);
+        if (position) {
+            if (type === 'current') {
+                getWeatherByBrowserLocation(position, 'current');
+            } else if (type === 'today') {
+                getWeatherByBrowserLocation(position, 'today');
+            } else if (type === 'forCast') {
+                getWeatherByBrowserLocation(position, 'forCast');
+            }
+        }
+    }).catch(error => {
+        const errors = {
+            1: "Keine Berechtigung erteilt",
+            2: "Etwas ist schief gegangen",
+            3: "Die Anfrage hat zu lange gedauert"
+        }
+        console.log(errors[error]);
+    });
+}
+
+/**
+ * @param city
+ * @param type possible values: 'current', 'today'
+ * */
+function handleWeatherRequestByCity(city: string, type: string) {
+    if (type === 'current') {
+        fetchWeatherByCity(city)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildCurrentWeatherResponseForCity(city, weather.weather, weather.main.temp);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'today') {
+        fetchWeatherByCity(city)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForTodayByCity(city, weather.weather, weather.main.temp_min, weather.main.temp_max);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    }
+}
 
 function Home() {
 
@@ -63,139 +160,38 @@ function Home() {
             command: `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`,
             callback: (command) => {
                 console.log(command);
-                chrome.tts.speak('Danke für die Nachfrage. Mir geht es gut.');
+                speak('Danke für die Nachfrage. Mir geht es gut.');
                 command.resetTranscript();
             }
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} clear`,
-            callback: (command) => {
-                console.log(command);
-                command.resetTranscript();
-            }
+            command: `reset`,
+            callback: (command) => command.resetTranscript()
         },
         {
             command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`,
-            callback: () => {
-                // logging
-                // get geolocation
-                getCurrentLocation().then(position => {
-                    console.log(position);
-                    if (position) {
-                        fetchWeather(position.coords.latitude, position.coords.longitude)
-                            .then(weather => {
-                                console.log('Weather: ', weather);
-                                const response = buildCurrentWeatherResponse(weather.current.weather, weather.current.temp);
-                                chrome.tts.speak(response);
-                            })
-                            .catch(error => {
-                                console.log('Error calling weather api: ', error)
-                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
-                            });
-                    }
-                }).catch(error => {
-                    const errors = {
-                        1: "Keine Berechtigung erteilt",
-                        2: "Etwas ist schief gegangen",
-                        3: "Die Anfrage hat zu lange gedauert"
-                    }
-                    console.log(errors[error]);
-                });
-            }
+            callback: () => handleWeatherRequestByBrowserLocation('current')
         },
         {
             command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`,
-            callback: () => {
-                getCurrentLocation().then(position => {
-                    console.log(position);
-                    if (position) {
-                        fetchWeather(position.coords.latitude, position.coords.longitude)
-                            .then(weather => {
-                                console.log('Weather: ', weather);
-                                const response = buildWeatherResponseForToday(weather.daily[0].weather, weather.daily[0].temp.min, weather.daily[0].temp.max);
-                                chrome.tts.speak(response);
-                            })
-                            .catch(error => {
-                                console.log('Error calling weather api: ', error)
-                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
-                            });
-                    }
-                }).catch(error => {
-                    const errors = {
-                        1: "Keine Berechtigung erteilt",
-                        2: "Etwas ist schief gegangen",
-                        3: "Die Anfrage hat zu lange gedauert"
-                    }
-                    console.log(errors[error]);
-                });
-            }
-        },
-        {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter in *`,
-            callback: (city) => {
-                fetchWeatherByCity(city)
-                    .then(weather => {
-                        console.log('Weather: ', weather);
-                        const response = buildCurrentWeatherResponseForCity(city, weather.weather, weather.main.temp);
-                        chrome.tts.speak(response);
-                    })
-                    .catch(error => {
-                        console.log('Error calling weather api: ', error)
-                        chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
-                    });
-            }
-        },
-        {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute in *`,
-            callback: (city) => {
-                fetchWeatherByCity(city)
-                    .then(weather => {
-                        console.log('Weather: ', weather);
-                        const response = buildWeatherResponseForTodayByCity(city, weather.weather, weather.main.temp_min, weather.main.temp_max);
-                        chrome.tts.speak(response);
-                    })
-                    .catch(error => {
-                        console.log('Error calling weather api: ', error)
-                        chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
-                    });
-            }
+            callback: () => handleWeatherRequestByBrowserLocation('today')
         },
         {
             command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter in den nächsten drei tagen`,
-            callback: () => {
-                // logging
-                // get geolocation
-                getCurrentLocation().then(position => {
-                    console.log(position);
-                    if (position) {
-                        fetchWeather(position.coords.latitude, position.coords.longitude)
-                            .then(weather => {
-                                console.log('Weather: ', weather);
-                                const response = buildWeatherResponseForNextThreeDays(weather.daily[1], weather.daily[2], weather.daily[3]);
-                                chrome.tts.speak(response);
-                            })
-                            .catch(error => {
-                                console.log('Error calling weather api: ', error)
-                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
-                            });
-                    }
-                }).catch(error => {
-                    const errors = {
-                        1: "Keine Berechtigung erteilt",
-                        2: "Etwas ist schief gegangen",
-                        3: "Die Anfrage hat zu lange gedauert"
-                    }
-                    console.log(errors[error]);
-                });
-            }
+            callback: () => handleWeatherRequestByBrowserLocation('forCast')
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter in *`,
+            callback: (city) => handleWeatherRequestByCity(city, 'current')
+        },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute in *`,
+            callback: (city) => handleWeatherRequestByCity(city, 'today')
         },
     ]
 
     const {
-        transcript,
-        isMicrophoneAvailable,
-        listening,
-        browserSupportsSpeechRecognition,
+        transcript, isMicrophoneAvailable, listening, browserSupportsSpeechRecognition,
     } = useSpeechRecognition({commands: commands});
 
     if (!browserSupportsSpeechRecognition) {
