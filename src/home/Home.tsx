@@ -4,7 +4,7 @@ import {
     ASSISTANT_WAKEUP_COMMAND,
     BACKGROUND_ID,
     buildCurrentWeatherResponse,
-    buildCurrentWeatherResponseForCity,
+    buildCurrentWeatherResponseForCity, buildWeatherResponseForNextThreeDays,
     buildWeatherResponseForToday,
     buildWeatherResponseForTodayByCity,
     CONTENT_SCRIPT_ID,
@@ -64,12 +64,14 @@ function Home() {
             callback: (command) => {
                 console.log(command);
                 chrome.tts.speak('Danke für die Nachfrage. Mir geht es gut.');
+                command.resetTranscript();
             }
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} vergiss dein Gedächtnis`,
-            callback: ({resetTranscript}) => {
-                resetTranscript();
+            command: `${ASSISTANT_WAKEUP_COMMAND} clear`,
+            callback: (command) => {
+                console.log(command);
+                command.resetTranscript();
             }
         },
         {
@@ -158,6 +160,35 @@ function Home() {
                     });
             }
         },
+        {
+            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter in den nächsten drei tagen`,
+            callback: () => {
+                // logging
+                // get geolocation
+                getCurrentLocation().then(position => {
+                    console.log(position);
+                    if (position) {
+                        fetchWeather(position.coords.latitude, position.coords.longitude)
+                            .then(weather => {
+                                console.log('Weather: ', weather);
+                                const response = buildWeatherResponseForNextThreeDays(weather.daily[1], weather.daily[2], weather.daily[3]);
+                                chrome.tts.speak(response);
+                            })
+                            .catch(error => {
+                                console.log('Error calling weather api: ', error)
+                                chrome.tts.speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+                            });
+                    }
+                }).catch(error => {
+                    const errors = {
+                        1: "Keine Berechtigung erteilt",
+                        2: "Etwas ist schief gegangen",
+                        3: "Die Anfrage hat zu lange gedauert"
+                    }
+                    console.log(errors[error]);
+                });
+            }
+        },
     ]
 
     const {
@@ -165,15 +196,13 @@ function Home() {
         isMicrophoneAvailable,
         listening,
         browserSupportsSpeechRecognition,
-        resetTranscript
     } = useSpeechRecognition({commands: commands});
-
-    const [recognizedText, setRecognizedText] = useState(transcript);
 
     if (!browserSupportsSpeechRecognition) {
         return (
-            <Box>
-                <Typography variant={"h1"} component={"h1"}>Der Browser ist nicht geeignet Sprache zu erkennen.</Typography>
+            <Box style={{height: 'calc(100vh - 64px - 1rem - 4px)'}}>
+                <Typography variant={"h1"} component={"h1"}>Der Browser ist nicht geeignet Sprache zu
+                    erkennen.</Typography>
             </Box>
         );
     }
