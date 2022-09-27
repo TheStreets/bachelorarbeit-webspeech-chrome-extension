@@ -1,6 +1,7 @@
 // communication specific
 
-import {Weather, WeatherByCity, WeatherElement} from "../models/weather";
+import {Daily, Temp, Weather, WeatherByCity, WeatherCondition, WeatherElement, WeatherGroup} from "../models/weather";
+import {TimeUtility} from "./time-utility";
 
 export const EXTENSION_ID = chrome.i18n.getMessage("@@extension_id");
 export const CONTENT_SCRIPT_ID = `${EXTENSION_ID}/contentScript`;
@@ -60,9 +61,9 @@ export function buildCurrentWeatherResponse(weatherElements: WeatherElement[], c
         for (let i = 0; i < weatherElements.length; i++) {
             const condition = weatherElements[i].description;
             console.log('Cond: ', condition);
-            if (i === weatherElements.length){
+            if (i === weatherElements.length) {
                 // last element
-                sentence +=  'und ' + condition + ` bei ${Math.round(currentTemp)} Grad Celsius`;
+                sentence += 'und ' + condition + ` bei ${Math.round(currentTemp)} Grad Celsius`;
             } else {
                 sentence += condition + ', ';
             }
@@ -82,9 +83,9 @@ export function buildWeatherResponseForToday(weatherElements: WeatherElement[], 
         for (let i = 0; i < weatherElements.length; i++) {
             const condition = weatherElements[i].description;
             console.log('Cond: ', condition);
-            if (i === weatherElements.length){
+            if (i === weatherElements.length) {
                 // last element
-                sentence +=  'und ' + condition + ` sein. Dabei werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} Grad erreicht`;
+                sentence += 'und ' + condition + ` sein. Dabei werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} Grad erreicht`;
             } else {
                 sentence += condition + ', ';
             }
@@ -103,9 +104,9 @@ export function buildCurrentWeatherResponseForCity(city: string, weatherElements
         sentence = `Momentan ist es in ${city} `
         for (let i = 0; i < weatherElements.length; i++) {
             const condition = weatherElements[i].description;
-            if (i === weatherElements.length){
+            if (i === weatherElements.length) {
                 // last element
-                sentence +=  'und ' + condition + ` bei ${Math.round(currentTemp)} Grad Celsius`;
+                sentence += 'und ' + condition + ` bei ${Math.round(currentTemp)} Grad Celsius`;
             } else {
                 sentence += condition + ', ';
             }
@@ -125,13 +126,120 @@ export function buildWeatherResponseForTodayByCity(city: string, weatherElements
         for (let i = 0; i < weatherElements.length; i++) {
             const condition = weatherElements[i].description;
             console.log('Cond: ', condition);
-            if (i === weatherElements.length){
+            if (i === weatherElements.length) {
                 // last element
-                sentence +=  'und ' + condition + ` sein. Dabei werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} Grad erreicht`;
+                sentence += 'und ' + condition + ` sein. Dabei werden Temperaturen zwischen ${Math.round(minTemp)} und ${Math.round(maxTemp)} Grad erreicht`;
             } else {
                 sentence += condition + ', ';
             }
         }
     }
     return sentence;
+}
+
+export function buildWeatherResponseForNextThreeDays(day1: Daily, day2: Daily, day3: Daily): string {
+    const weatherConditions = new WeatherCondition();
+    const minTemp = Math.min(day1.temp.min, day2.temp.min, day3.temp.min);
+    const maxTemp = Math.min(day1.temp.max, day2.temp.max, day3.temp.max);
+
+    if (day1.weather.length === 0 && day2.weather.length === 0 && day3.weather.length === 0) {
+        return `In den nächsten drei Tagen werden Tiefstemperaturen von ${minTemp} Grad und Höchsttemperaturen von ${maxTemp} Grad erreicht.`;
+    }
+    return buildResponseForDay1(day1, weatherConditions) + buildResponseForDay2(day2, weatherConditions) + buildResponseForDay3(day3, weatherConditions);
+}
+
+function buildResponseForDay1(day: Daily, weatherConditions: WeatherCondition) {
+    let sentence = '';
+    const timeUtility = new TimeUtility(day.dt);
+    console.log('Date: ', timeUtility.date);
+    if (checkIsRaining(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend regnerisch mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsThunderStorming(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend stürmisch mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsSunny(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend klar mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsFoggy(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend neblig mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsCloudy(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend bewölkt mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsSnow(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es überwiegend schneien mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    } else if (checkIsSquall(day.weather[0].id, weatherConditions)) {
+        sentence += `Morgen wird es sehr stürmig mit einer Temperatur von ${Math.round(day.temp.day)} Grad.`;
+    }
+    return sentence;
+}
+
+function buildResponseForDay2(day: Daily, weatherConditions: WeatherCondition) {
+    let sentence = '';
+    const timeUtility = new TimeUtility(day.dt);
+    console.log('Date: ', timeUtility.date);
+    const weekDay = timeUtility.getWeekDayAsLocalString();
+    if (checkIsRaining(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich regnerisch und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsThunderStorming(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich stürmig und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsSunny(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich klar und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsFoggy(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich neblig und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsCloudy(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich bewölkt und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsSnow(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es hauptsächlich schneien und die Temperaturen reichen von ${Math.round(day.temp.min)} bis ${Math.round(day.temp.max)} Grad`;
+    } else if (checkIsSquall(day.weather[0].id, weatherConditions)) {
+        sentence += ` Am ${weekDay} wird es sehr stürmig und die Temperaturen reichen von ${Math.round(day.temp.min)} Grad bis ${Math.round(day.temp.max)} Grad.`;
+    }
+    return sentence;
+}
+
+function buildResponseForDay3(day: Daily, weatherConditions: WeatherCondition) {
+    let sentence = '';
+    const timeUtility = new TimeUtility(day.dt);
+    console.log('Date: ', timeUtility.date);
+    const weekDay = timeUtility.getWeekDayAsLocalString();
+    if (checkIsRaining(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird überwiegend regnerisch, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsThunderStorming(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird überwiegend stürmig, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsSunny(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird überwiegend klar, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsFoggy(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der${weekDay} wird überwiegend neblig, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsCloudy(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird überwiegend bewölkt, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsSnow(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird überwiegend schneien, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    } else if (checkIsSquall(day.weather[0].id, weatherConditions)) {
+        sentence += ` Der ${weekDay} wird sehr stürmig, dabei werden Tiefsttemperaturen von ${Math.round(day.temp.min)} Grad und Höchsttemperaturen von ${Math.round(day.temp.max)} Grad erreicht.`;
+    }
+    return sentence;
+}
+
+function checkIsRaining(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Rain, id) || weatherConditions.checkIs(WeatherGroup.Drizzle, id);
+}
+
+function checkIsThunderStorming(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.ThunderStorm, id);
+}
+
+function checkIsSquall(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Squall, id);
+}
+
+function checkIsSunny(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Clear, id);
+}
+
+function checkIsFoggy(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Fog, id) || weatherConditions.checkIs(WeatherGroup.Mist, id);
+}
+
+function checkIsCloudy(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Clouds, id);
+}
+
+function checkIsSnow(id: number, weatherConditions: WeatherCondition): boolean {
+    return weatherConditions.checkIs(WeatherGroup.Snow, id);
 }
