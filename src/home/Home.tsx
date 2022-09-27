@@ -23,7 +23,7 @@ import {
     Typography
 } from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
-import {CommandosTable} from "../components/CommandosComponent";
+import {CommandTable} from "../components/CommandTableComponent";
 import {useState} from "react";
 
 function speak(text: string) {
@@ -266,7 +266,7 @@ function Home() {
                     </Typography>
                 </Box>
                 <Box paddingTop={"1rem"}>
-                    <CommandosTable/>
+                    <CommandTable/>
                 </Box>
             </Box>
         </Box>
