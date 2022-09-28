@@ -1,7 +1,6 @@
 import "./Home.css";
 import {Message, MessageType} from "../models/Message";
 import {
-    ASSISTANT_WAKEUP_COMMAND,
     BACKGROUND_ID,
     buildCurrentWeatherResponse,
     buildCurrentWeatherResponseForCity, buildWeatherResponseForNextThreeDays,
@@ -24,7 +23,14 @@ import {
 } from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
-import {useState} from "react";
+import {
+    COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_CURRENT_WEATHER_BY_CITY,
+    COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_HOW_ARE_YOU,
+    COMMAND_RESET,
+    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION, COMMAND_TODAY_WEATHER_BY_CITY
+} from "../models/command";
 
 function speak(text: string) {
     chrome.tts.speak(text)
@@ -157,7 +163,7 @@ function Home() {
 
     const commands = [
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`,
+            command: COMMAND_HOW_ARE_YOU,
             callback: (command) => {
                 console.log(command);
                 speak('Danke für die Nachfrage. Mir geht es gut.');
@@ -165,27 +171,27 @@ function Home() {
             }
         },
         {
-            command: `reset`,
+            command: COMMAND_RESET,
             callback: (command) => command.resetTranscript()
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`,
+            command: COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
             callback: () => handleWeatherRequestByBrowserLocation('current')
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`,
+            command: COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
             callback: () => handleWeatherRequestByBrowserLocation('today')
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter in den nächsten drei tagen`,
+            command: COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
             callback: () => handleWeatherRequestByBrowserLocation('forCast')
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter in *`,
+            command: COMMAND_CURRENT_WEATHER_BY_CITY,
             callback: (city) => handleWeatherRequestByCity(city, 'current')
         },
         {
-            command: `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute in *`,
+            command: COMMAND_TODAY_WEATHER_BY_CITY,
             callback: (city) => handleWeatherRequestByCity(city, 'today')
         },
     ]
@@ -260,11 +266,6 @@ function Home() {
             <Divider/>
             <Box paddingY={"1rem"}>
                 <Typography style={{color: 'white', textTransform: 'uppercase'}}>Kommandos</Typography>
-                <Box>
-                    <Typography color={"secondary"}>
-                        Jeder Befehl startet mit diesen Worten: Hallo Chrome
-                    </Typography>
-                </Box>
                 <Box paddingTop={"1rem"}>
                     <CommandTable/>
                 </Box>
