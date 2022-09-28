@@ -8,20 +8,24 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {
     ASSISTANT_WAKEUP_COMMAND,
-    Command,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU,
     COMMAND_RESET,
-    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION, COMMAND_TODAY_WEATHER_BY_CITY,
+    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_TODAY_WEATHER_BY_CITY,
     CommandType
 } from "../models/command";
 import Box from "@mui/material/Box";
 import {Typography} from "@mui/material";
 
-export function createTableData(command: string, example: string, commandType: CommandType): Command {
-    return {command, example, commandType};
+export function createTableData(command: string, example: string, commandType: CommandType) {
+    let commandTypeAsString = '';
+    if(commandType === CommandType.INTRODUCTION) commandTypeAsString = 'introduction'.toUpperCase();
+    if(commandType === CommandType.WEATHER) commandTypeAsString = 'weather'.toUpperCase();
+    if(commandType === CommandType.UTILITY) commandTypeAsString = 'utility'.toUpperCase();
+    return {command, example, commandTypeAsString};
 }
 
 
@@ -58,7 +62,7 @@ export function CommandTable() {
                                 <TableRow
                                     key={row.command}
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}>
-                                    <TableCell component="th" scope="row">{row.commandType}</TableCell>
+                                    <TableCell component="th" scope="row">{row.commandTypeAsString}</TableCell>
                                     <TableCell align="left">{row.command}</TableCell>
                                     <TableCell align="left">{row.example}</TableCell>
                                 </TableRow>
