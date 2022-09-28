@@ -21,6 +21,7 @@
     "desktopCapture",
     "geolocation",
     "search",
-    "tts"
+    "tts",
+    "contextMenus"
   ]
 }
