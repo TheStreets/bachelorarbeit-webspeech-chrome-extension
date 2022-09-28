@@ -1,6 +1,16 @@
 import "./Home.css";
 import {Message, MessageType} from "../models/Message";
-import {BACKGROUND_ID, COMMANDS, CONTENT_SCRIPT_ID} from "../utils/utils";
+import {
+    BACKGROUND_ID,
+    buildCurrentWeatherResponse,
+    buildCurrentWeatherResponseForCity, buildWeatherResponseForNextThreeDays,
+    buildWeatherResponseForToday,
+    buildWeatherResponseForTodayByCity,
+    CONTENT_SCRIPT_ID,
+    fetchWeather,
+    fetchWeatherByCity,
+    getCurrentLocation
+} from "../utils/utils";
 import Port = chrome.runtime.Port;
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import Box from "@mui/material/Box";
@@ -12,8 +22,19 @@ import {
     Typography
 } from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
-import {CommandosTable} from "../components/CommandosComponent";
+import {CommandTable} from "../components/CommandTableComponent";
+import {
+    COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_CURRENT_WEATHER_BY_CITY,
+    COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_HOW_ARE_YOU,
+    COMMAND_RESET,
+    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION, COMMAND_TODAY_WEATHER_BY_CITY
+} from "../models/command";
 
+function speak(text: string) {
+    chrome.tts.speak(text)
+}
 
 function setupCommunication() {
     // connection with the background.js
@@ -43,18 +64,154 @@ function setupCommunication() {
     });
 }
 
+/**
+ * @param position as geolocation
+ * @param type: possible values 'current', 'today', 'forCast'
+ * */
+function getWeatherByBrowserLocation(position, type: string): any {
+    if (type === 'current') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                const response = buildCurrentWeatherResponse(weather.current.weather, weather.current.temp);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'today') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForToday(weather.daily[0].weather, weather.daily[0].temp.min, weather.daily[0].temp.max);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'forCast') {
+        fetchWeather(position.coords.latitude, position.coords.longitude)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForNextThreeDays(weather.daily[1], weather.daily[2], weather.daily[3]);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    }
+}
+
+/**
+ * * @param type: possible values 'current', 'today', 'forCast'
+ * */
+function handleWeatherRequestByBrowserLocation(type: string) {
+    getCurrentLocation().then(position => {
+        console.log(position);
+        if (position) {
+            if (type === 'current') {
+                getWeatherByBrowserLocation(position, 'current');
+            } else if (type === 'today') {
+                getWeatherByBrowserLocation(position, 'today');
+            } else if (type === 'forCast') {
+                getWeatherByBrowserLocation(position, 'forCast');
+            }
+        }
+    }).catch(error => {
+        const errors = {
+            1: "Keine Berechtigung erteilt",
+            2: "Etwas ist schief gegangen",
+            3: "Die Anfrage hat zu lange gedauert"
+        }
+        console.log(errors[error]);
+    });
+}
+
+/**
+ * @param city
+ * @param type possible values: 'current', 'today'
+ * */
+function handleWeatherRequestByCity(city: string, type: string) {
+    if (type === 'current') {
+        fetchWeatherByCity(city)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildCurrentWeatherResponseForCity(city, weather.weather, weather.main.temp);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    } else if (type === 'today') {
+        fetchWeatherByCity(city)
+            .then(weather => {
+                console.log('Weather: ', weather);
+                const response = buildWeatherResponseForTodayByCity(city, weather.weather, weather.main.temp_min, weather.main.temp_max);
+                speak(response);
+            })
+            .catch(error => {
+                console.log('Error calling weather api: ', error)
+                speak('Es ist ein Fehler aufgetreten. Versuchen Sie es zu einem späteren Zeitpunkt nochmal.');
+            });
+    }
+}
 
 function Home() {
 
+    const commands = [
+        {
+            command: COMMAND_HOW_ARE_YOU,
+            callback: (command) => {
+                console.log(command);
+                speak('Danke für die Nachfrage. Mir geht es gut.');
+                command.resetTranscript();
+            }
+        },
+        {
+            command: COMMAND_RESET,
+            callback: (command) => command.resetTranscript()
+        },
+        {
+            command: COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
+            callback: () => handleWeatherRequestByBrowserLocation('current')
+        },
+        {
+            command: COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
+            callback: () => handleWeatherRequestByBrowserLocation('today')
+        },
+        {
+            command: COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
+            callback: () => handleWeatherRequestByBrowserLocation('forCast')
+        },
+        {
+            command: COMMAND_CURRENT_WEATHER_BY_CITY,
+            callback: (city) => handleWeatherRequestByCity(city, 'current')
+        },
+        {
+            command: COMMAND_TODAY_WEATHER_BY_CITY,
+            callback: (city) => handleWeatherRequestByCity(city, 'today')
+        },
+    ]
+
     const {
-        transcript,
-        isMicrophoneAvailable,
-        listening
-    } = useSpeechRecognition({commands: COMMANDS});
+        transcript, isMicrophoneAvailable, listening, browserSupportsSpeechRecognition,
+    } = useSpeechRecognition({commands: commands});
+
+    if (!browserSupportsSpeechRecognition) {
+        return (
+            <Box style={{height: 'calc(100vh - 64px - 1rem - 4px)'}}>
+                <Typography variant={"h1"} component={"h1"}>Der Browser ist nicht geeignet Sprache zu
+                    erkennen.</Typography>
+            </Box>
+        );
+    }
 
     function startRecognition(event) {
         if (!isMicrophoneAvailable) {
-            SpeechRecognition.startListening({continuous: true, language: 'de_DE'});
+            SpeechRecognition.startListening({continuous: true, language: 'de_DE', interimResults: false});
         }
     }
 
@@ -109,13 +266,8 @@ function Home() {
             <Divider/>
             <Box paddingY={"1rem"}>
                 <Typography style={{color: 'white', textTransform: 'uppercase'}}>Kommandos</Typography>
-                <Box>
-                    <Typography color={"secondary"}>
-                        Jeder Befehl startet mit diesen Worten: Hallo Chrome
-                    </Typography>
-                </Box>
                 <Box paddingTop={"1rem"}>
-                    <CommandosTable/>
+                    <CommandTable/>
                 </Box>
             </Box>
         </Box>
