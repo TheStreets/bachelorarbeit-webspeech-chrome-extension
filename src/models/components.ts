@@ -1,9 +1,3 @@
-export interface Assignment{
-    request: string;
-    response: string;
-    component: Component;
-}
-
 export enum Component {
     INIT,
     NO_COMPONENT,
