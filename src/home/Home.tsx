@@ -1,26 +1,19 @@
 import "./Home.css";
 import {Message, MessageType} from "../models/Message";
 import {
-    BACKGROUND_ID,
     buildCurrentWeatherResponse,
-    buildCurrentWeatherResponseForCity, buildWeatherResponseForNextThreeDays,
+    buildCurrentWeatherResponseForCity,
+    buildWeatherResponseForNextThreeDays,
     buildWeatherResponseForToday,
     buildWeatherResponseForTodayByCity,
-    CONTENT_SCRIPT_ID,
+    EXTENSION_ID,
     fetchWeather,
     fetchWeatherByCity,
     getCurrentLocation
 } from "../utils/utils";
-import Port = chrome.runtime.Port;
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import Box from "@mui/material/Box";
-import {
-    Button,
-    Divider,
-    SvgIcon,
-    TextField,
-    Typography
-} from "@mui/material";
+import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
@@ -28,41 +21,19 @@ import {
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU,
+    COMMAND_OPEN_YOUTUBE_PAGE,
+    COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_RESET,
-    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION, COMMAND_TODAY_WEATHER_BY_CITY
+    COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_TODAY_WEATHER_BY_CITY
 } from "../models/command";
+
+let connection:any = undefined;
 
 function speak(text: string) {
     chrome.tts.speak(text)
 }
 
-function setupCommunication() {
-    // connection with the background.js
-    chrome.runtime.onConnect.addListener(function (connection: Port) {
-        if (connection.name === CONTENT_SCRIPT_ID) {
-            connection.onMessage.addListener(function (message) {
-                if (message.type === MessageType.SETUP_COMMUNICATION) {
-                    const msg: Message = {message: "", type: MessageType.COMMUNICATION_ESTABLISHED}
-                    connection.postMessage(msg);
-                }
-            });
-        }
-        if (connection.name === BACKGROUND_ID) {
-            connection.onMessage.addListener(function (message) {
-                if (message.type === MessageType.START_RECOGNITION) {
-                    console.log('Received Message: ', message);
-                    const msg: Message = {
-                        message: "",
-                        type: MessageType.RECOGNITION_STARTED
-                    }
-                    connection.postMessage(msg);
-                } else if (message.type === MessageType.COMMAND_CALL) {
-
-                }
-            });
-        }
-    });
-}
 
 /**
  * @param position as geolocation
@@ -159,8 +130,32 @@ function handleWeatherRequestByCity(city: string, type: string) {
     }
 }
 
-function Home() {
+/**
+ * open tab input url youtube.com
+ * */
+function openYoutube(command) {
+    console.log(command);
+    chrome.tabs.create({
+        url: 'https://www.youtube.com'
+    }).then(tab => {
+        if (tab.id) {
+            const message: Message = {message: '', type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
+            chrome.tabs.sendMessage(tab.id, message);
+        }
+    });
+}
 
+/**
+ * open youtube video based on the index, from left top side to the right side
+ * */
+function openYoutubeVideo(index) {
+    // check if index is one, handle this one specific
+    if(index === 'eins') index = 1;
+    const message: Message = {message: index, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
+    connection.postMessage(message);
+}
+
+function Home() {
     const commands = [
         {
             command: COMMAND_HOW_ARE_YOU,
@@ -194,7 +189,22 @@ function Home() {
             command: COMMAND_TODAY_WEATHER_BY_CITY,
             callback: (city) => handleWeatherRequestByCity(city, 'today')
         },
+        {
+            command: COMMAND_OPEN_YOUTUBE_PAGE,
+            callback: openYoutube
+        },
+        {
+            command: COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
+            callback: openYoutubeVideo
+        },
     ]
+    const message:Message = {
+        message: '',
+        type: MessageType.SETUP_COMMUNICATION
+    };
+    const port = chrome.runtime.connect({name: EXTENSION_ID});
+    connection = port;
+    port.postMessage(message);
 
     const {
         transcript, isMicrophoneAvailable, listening, browserSupportsSpeechRecognition,
