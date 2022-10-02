@@ -39,6 +39,14 @@ function getYoutubeVideoControls() {
     return leftControls.concat(rightControls);
 }
 
+/**
+ * helper function, triggers the click on the mute button
+ * */
+function handleMuteClick() {
+    const muteButton = Array.from(document.getElementsByClassName('ytp-mute-button'))[0] as HTMLButtonElement;
+    muteButton.click();
+}
+
 function getInputFields() {
     const inputs = document.getElementsByTagName('input');
     const filteredInputs: InputElement[] = [];
@@ -71,7 +79,6 @@ function getInputFields() {
 
 const App: React.FC<{}> = () => {
     const [component, setComponent] = useState(Component.INIT);
-    const [paused, setPaused] = useState(false);
 
     useEffect(() => {
         chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
@@ -101,6 +108,12 @@ const App: React.FC<{}> = () => {
                     console.log('starting next video');
                     const nextVideoButton = Array.from(document.getElementsByClassName('ytp-next-button'))[0] as HTMLAnchorElement;
                     nextVideoButton.click();
+                    break;
+                case MessageType.COMMAND_MUTE_YOUTUBE_VIDEO:
+                   handleMuteClick();
+                    break;
+                case MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO:
+                    handleMuteClick();
                     break;
                 default:
                     console.log('Wrong component');

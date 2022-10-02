@@ -79,9 +79,10 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Youtube zur Verfügung.');
                 }
             });
-        } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO) {
-            handleYoutubeVideoPage(message);
-        } else if (message.type === MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO) {
+        } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO ||
+            message.type === MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO ||
+            message.type === MessageType.COMMAND_MUTE_YOUTUBE_VIDEO ||
+            message.type === MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO) {
             handleYoutubeVideoPage(message);
         }
     });
@@ -94,18 +95,20 @@ async function getActiveTab() {
 }
 
 function isYoutubeHomePage(url: string) {
-    return url?.startsWith('https://www.youtube.com') && !url?.includes('/watch?v=');
+    return url?.startsWith('https://www.youtube.com') && (!url?.includes('/watch?v=') || url?.includes('watch?app=desktop&v='));
 }
 
 function isYoutubeVideoPage(url: string) {
-    return url?.startsWith('https://www.youtube.com') && url?.includes('/watch?v=');
+    return url?.startsWith('https://www.youtube.com') && (url?.includes('/watch?v=') || url?.includes('watch?app=desktop&v='));
 }
 
 /**
- * helper function that sends the message to the youtube video page
+ * helper function that forwards the message to the youtube video page
  * */
 function handleYoutubeVideoPage(message: Message) {
+    console.log()
     getActiveTab().then(youtubeVideoTab => {
+        console.log(youtubeVideoTab);
         if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
             chrome.tabs.sendMessage(youtubeVideoTab.id as number, message);
         } else {

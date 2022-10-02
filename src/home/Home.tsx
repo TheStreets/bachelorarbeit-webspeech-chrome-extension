@@ -20,7 +20,7 @@ import {
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_HOW_ARE_YOU,
+    COMMAND_HOW_ARE_YOU, COMMAND_MUTE_YOUTUBE_VIDEO_1, COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
@@ -29,7 +29,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
     COMMAND_RESET, COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_TODAY_WEATHER_BY_CITY
+    COMMAND_TODAY_WEATHER_BY_CITY, COMMAND_UNMUTE_YOUTUBE_VIDEO
 } from "../models/command";
 
 let connection:any = undefined;
@@ -170,11 +170,32 @@ function playOrPauseVideo() {
     connection.postMessage(message);
 }
 
-
+/**
+ * starts the next video in the playlist
+ * */
 function startNextYoutubeVideo() {
     const message:Message ={
         message: '',
         type: MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * mutes the playing video
+ * */
+function muteYoutubeVideo() {
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_MUTE_YOUTUBE_VIDEO
+    }
+    connection.postMessage(message);
+}
+
+function unMuteYoutubeVideo() {
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO
     }
     connection.postMessage(message);
 }
@@ -244,6 +265,18 @@ function Home() {
         {
             command: COMMAND_START_NEXT_YOUTUBE_VIDEO,
             callback: startNextYoutubeVideo
+        },
+        {
+            command: COMMAND_MUTE_YOUTUBE_VIDEO_1,
+            callback: muteYoutubeVideo
+        },
+        {
+            command: COMMAND_MUTE_YOUTUBE_VIDEO_2,
+            callback: muteYoutubeVideo
+        },
+        {
+            command: COMMAND_UNMUTE_YOUTUBE_VIDEO,
+            callback: unMuteYoutubeVideo
         },
     ]
     const message:Message = {
