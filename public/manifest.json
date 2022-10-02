@@ -22,6 +22,7 @@
     "geolocation",
     "search",
     "tts",
-    "contextMenus"
+    "contextMenus",
+    "activeTab"
   ]
 }
