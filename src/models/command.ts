@@ -17,6 +17,7 @@ export const COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2 = `${ASSISTANT_WAKEUP_COMMAND} p
 export const COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3 = `${ASSISTANT_WAKEUP_COMMAND} start`;
 export const COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4 = `${ASSISTANT_WAKEUP_COMMAND} weiter`;
 export const COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5 = `${ASSISTANT_WAKEUP_COMMAND} wiedergeben`;
+export const COMMAND_START_NEXT_YOUTUBE_VIDEO = `${ASSISTANT_WAKEUP_COMMAND} nächstes Video (starten)`;
 
 export interface Command {
     command: string;

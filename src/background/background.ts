@@ -80,13 +80,9 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                 }
             });
         } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO) {
-            getActiveTab().then(youtubeVideoTab => {
-                if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
-                    chrome.tabs.sendMessage(youtubeVideoTab.id as number, message);
-                } else {
-                    chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn ein Youtube-Video geöffnet wurde.');
-                }
-            });
+            handleYoutubeVideoPage(message);
+        } else if (message.type === MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO) {
+            handleYoutubeVideoPage(message);
         }
     });
 });
@@ -101,6 +97,19 @@ function isYoutubeHomePage(url: string) {
     return url?.startsWith('https://www.youtube.com') && !url?.includes('/watch?v=');
 }
 
-function isYoutubeVideoPage(url:string) {
+function isYoutubeVideoPage(url: string) {
     return url?.startsWith('https://www.youtube.com') && url?.includes('/watch?v=');
+}
+
+/**
+ * helper function that sends the message to the youtube video page
+ * */
+function handleYoutubeVideoPage(message: Message) {
+    getActiveTab().then(youtubeVideoTab => {
+        if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
+            chrome.tabs.sendMessage(youtubeVideoTab.id as number, message);
+        } else {
+            chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn ein Youtube-Video geöffnet wurde.');
+        }
+    });
 }

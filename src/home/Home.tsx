@@ -27,7 +27,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
-    COMMAND_RESET,
+    COMMAND_RESET, COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY
 } from "../models/command";
@@ -170,6 +170,15 @@ function playOrPauseVideo() {
     connection.postMessage(message);
 }
 
+
+function startNextYoutubeVideo() {
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -231,6 +240,10 @@ function Home() {
         {
             command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
             callback: playOrPauseVideo
+        },
+        {
+            command: COMMAND_START_NEXT_YOUTUBE_VIDEO,
+            callback: startNextYoutubeVideo
         },
     ]
     const message:Message = {

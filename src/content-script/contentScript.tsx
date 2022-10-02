@@ -97,6 +97,11 @@ const App: React.FC<{}> = () => {
                     const playButton = Array.from(document.getElementsByClassName('ytp-play-button'))[0] as HTMLButtonElement;
                     playButton.click();
                     break;
+                case MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO:
+                    console.log('starting next video');
+                    const nextVideoButton = Array.from(document.getElementsByClassName('ytp-next-button'))[0] as HTMLAnchorElement;
+                    nextVideoButton.click();
+                    break;
                 default:
                     console.log('Wrong component');
             }
