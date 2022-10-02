@@ -23,6 +23,10 @@ import {
     COMMAND_HOW_ARE_YOU,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
     COMMAND_RESET,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY
@@ -155,6 +159,17 @@ function openYoutubeVideo(index) {
     connection.postMessage(message);
 }
 
+/**
+ * pause or start the video
+ * */
+function playOrPauseVideo() {
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -196,6 +211,26 @@ function Home() {
         {
             command: COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
             callback: openYoutubeVideo
+        },
+        {
+            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
+            callback: playOrPauseVideo
+        },
+        {
+            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
+            callback: playOrPauseVideo
+        },
+        {
+            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
+            callback: playOrPauseVideo
+        },
+        {
+            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
+            callback: playOrPauseVideo
+        },
+        {
+            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
+            callback: playOrPauseVideo
         },
     ]
     const message:Message = {

@@ -72,19 +72,35 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         if (message.type === MessageType.SETUP_COMMUNICATION) {
             console.log('Communication established');
         } else if (message.type === MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP) {
-            chrome.tabs.query({currentWindow: true, active: true})
-                .then(tabs => {
-                    const activeTab = tabs[0];
-                    console.log(activeTab);
-                    const isYoutubeHomepage = activeTab.url?.startsWith('https://www.youtube.com') &&
-                        !activeTab.url?.includes('/watch?v=');
-                    if (isYoutubeHomepage) {
-                        chrome.tabs.sendMessage(activeTab.id as number, message);
-                    } else {
-                        chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Youtube zur Verfügung.')
-                    }
-                });
+            getActiveTab().then(youtubeHomeTab => {
+                if (isYoutubeHomePage(youtubeHomeTab.url as string)) {
+                    chrome.tabs.sendMessage(youtubeHomeTab.id as number, message);
+                } else {
+                    chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Youtube zur Verfügung.');
+                }
+            });
+        } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO) {
+            getActiveTab().then(youtubeVideoTab => {
+                if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
+                    chrome.tabs.sendMessage(youtubeVideoTab.id as number, message);
+                } else {
+                    chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn ein Youtube-Video geöffnet wurde.');
+                }
+            });
         }
-
     });
 });
+
+
+async function getActiveTab() {
+    const tabs = await chrome.tabs.query({currentWindow: true, active: true});
+    return tabs[0];
+}
+
+function isYoutubeHomePage(url: string) {
+    return url?.startsWith('https://www.youtube.com') && !url?.includes('/watch?v=');
+}
+
+function isYoutubeVideoPage(url:string) {
+    return url?.startsWith('https://www.youtube.com') && url?.includes('/watch?v=');
+}

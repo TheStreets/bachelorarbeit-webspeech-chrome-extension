@@ -29,6 +29,16 @@ function getYoutubeVideosForSelection() {
     return filtered;
 }
 
+/**
+ * helper function, gets the controls from the video
+ * @return array of youtube control elements
+ * */
+function getYoutubeVideoControls() {
+    const leftControls = Array.from(document.getElementsByClassName('ytp-left-controls'));
+    const rightControls = Array.from(document.getElementsByClassName('ytp-right-controls'));
+    return leftControls.concat(rightControls);
+}
+
 function getInputFields() {
     const inputs = document.getElementsByTagName('input');
     const filteredInputs: InputElement[] = [];
@@ -61,6 +71,7 @@ function getInputFields() {
 
 const App: React.FC<{}> = () => {
     const [component, setComponent] = useState(Component.INIT);
+    const [paused, setPaused] = useState(false);
 
     useEffect(() => {
         chrome.runtime.onMessage.addListener((message: Message, sender, sendResponse) => {
@@ -80,6 +91,11 @@ const App: React.FC<{}> = () => {
                     }
                     console.log('Setting component')
                     setComponent(Component.NO_COMPONENT);
+                    break;
+                case MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO:
+                    console.log('pausing video');
+                    const playButton = Array.from(document.getElementsByClassName('ytp-play-button'))[0] as HTMLButtonElement;
+                    playButton.click();
                     break;
                 default:
                     console.log('Wrong component');
