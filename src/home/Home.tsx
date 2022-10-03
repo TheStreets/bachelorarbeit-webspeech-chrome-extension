@@ -17,6 +17,7 @@ import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
+    COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1, COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
@@ -182,7 +183,7 @@ function startNextYoutubeVideo() {
 }
 
 /**
- * mutes the playing video
+ * mutes the video
  * */
 function muteYoutubeVideo() {
     const message:Message ={
@@ -192,10 +193,25 @@ function muteYoutubeVideo() {
     connection.postMessage(message);
 }
 
+/**
+ * unmutes the video
+ * */
 function unMuteYoutubeVideo() {
     const message:Message ={
         message: '',
         type: MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * change volume
+ * */
+function changeVolume(volume) {
+    console.log('Volume: ', volume.split('%')[0]);
+    const message:Message ={
+        message: parseInt(volume.split('%')[0]),
+        type: MessageType.COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO
     }
     connection.postMessage(message);
 }
@@ -277,6 +293,14 @@ function Home() {
         {
             command: COMMAND_UNMUTE_YOUTUBE_VIDEO,
             callback: unMuteYoutubeVideo
+        },
+        {
+            command: COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
+            callback: changeVolume
+        },
+        {
+            command: COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
+            callback: changeVolume
         },
     ]
     const message:Message = {

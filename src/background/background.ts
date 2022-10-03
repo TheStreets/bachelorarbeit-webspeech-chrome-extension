@@ -82,7 +82,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO ||
             message.type === MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO ||
             message.type === MessageType.COMMAND_MUTE_YOUTUBE_VIDEO ||
-            message.type === MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO) {
+            message.type === MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO ||
+            message.type === MessageType.COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO) {
             handleYoutubeVideoPage(message);
         }
     });

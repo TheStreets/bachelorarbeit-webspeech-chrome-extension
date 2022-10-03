@@ -110,10 +110,18 @@ const App: React.FC<{}> = () => {
                     nextVideoButton.click();
                     break;
                 case MessageType.COMMAND_MUTE_YOUTUBE_VIDEO:
-                   handleMuteClick();
+                    handleMuteClick();
                     break;
                 case MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO:
                     handleMuteClick();
+                    break;
+                case MessageType.COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO:
+                    try {
+                        const player = document.getElementsByClassName('video-stream html5-main-video')[0] as HTMLVideoElement;
+                        player.volume = message.message / 100;
+                    } catch (e) {
+                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
+                    }
                     break;
                 default:
                     console.log('Wrong component');
