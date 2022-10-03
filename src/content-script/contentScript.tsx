@@ -75,6 +75,16 @@ function handleCinemaModeClick() {
     }
 }
 
+
+function searchOnGoogle(toBeSearched: string) {
+    const searchField = document.getElementsByClassName('gLFyf gsfi')[0] as HTMLInputElement;
+    searchField.value = toBeSearched;
+    const buttonsContainer = document.getElementsByClassName('FPdoLc lJ9FBc')[0] as HTMLDivElement;
+    const submitButton = buttonsContainer.getElementsByClassName('gNO89b')[0] as HTMLInputElement;
+    submitButton.click();
+}
+
+
 function getInputFields() {
     const inputs = document.getElementsByTagName('input');
     const filteredInputs: InputElement[] = [];
@@ -116,15 +126,12 @@ const App: React.FC<{}> = () => {
                     break;
                 case MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP:
                     const videos = getYoutubeVideosForSelection();
-                    console.log('Video: ', message.message);
                     try {
                         const selectedVideo = message.message;
-                        console.log('Opening Video: ', selectedVideo);
                         videos[selectedVideo].click();
                     } catch (e) {
                         chrome.tts.speak('Leider ist ein Fehler aufgetreten, ich kann Ihre Anfrage nicht bearbeiten.')
                     }
-                    console.log('Setting component')
                     setComponent(Component.NO_COMPONENT);
                     break;
                 case MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO:
@@ -180,6 +187,9 @@ const App: React.FC<{}> = () => {
                     const searchButton = document.getElementById('voice-search-button') as HTMLDivElement;
                     const aTag = searchButton.getElementsByClassName('yt-simple-endpoint style-scope ytd-button-renderer')[0] as HTMLAnchorElement;
                     aTag.click();
+                    break;
+                case MessageType.COMMAND_SEARCH_ON_GOOGLE:
+                    searchOnGoogle(message.message);
                     break;
                 default:
                     console.log('Wrong component');

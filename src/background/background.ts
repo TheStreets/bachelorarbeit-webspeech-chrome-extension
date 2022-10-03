@@ -74,7 +74,9 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         } else if (message.type === MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP) {
             getActiveTab().then(youtubeHomeTab => {
                 if (isYoutubeHomePage(youtubeHomeTab.url as string)) {
-                    chrome.tabs.sendMessage(youtubeHomeTab.id as number, message);
+                    chrome.tabs.sendMessage(youtubeHomeTab.id as number, message).catch(error => {
+                        speakErrorMessage(error);
+                    });
                 } else {
                     chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Youtube zur Verfügung.');
                 }
@@ -91,20 +93,39 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN ||
             message.type === MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH) {
             handleYoutubeVideoPage(message);
+        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE) {
+            getActiveTab().then(googleTab => {
+                if (googleTab.url?.startsWith('https://www.google.de')) {
+                    chrome.tabs.sendMessage(googleTab.id as number, message).catch(error => {
+                        speakErrorMessage(error);
+                    });
+                } else {
+                    chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Google zur Verfügung.');
+                }
+            });
         }
     });
 });
 
-
+/**
+ * helper function, gets the active tab
+ * @return active Tab
+ * */
 async function getActiveTab() {
     const tabs = await chrome.tabs.query({currentWindow: true, active: true});
     return tabs[0];
 }
 
+/**
+ * helper function, checks if it is the youtube homepage
+ * */
 function isYoutubeHomePage(url: string) {
     return url?.startsWith('https://www.youtube.com') && (!url?.includes('/watch?v=') || url?.includes('watch?app=desktop&v='));
 }
 
+/**
+ * helper function, checks if it is the youtube video page
+ * */
 function isYoutubeVideoPage(url: string) {
     return url?.startsWith('https://www.youtube.com') && (url?.includes('/watch?v=') || url?.includes('watch?app=desktop&v='));
 }
@@ -117,9 +138,19 @@ function handleYoutubeVideoPage(message: Message) {
     getActiveTab().then(youtubeVideoTab => {
         console.log(youtubeVideoTab);
         if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
-            chrome.tabs.sendMessage(youtubeVideoTab.id as number, message);
+            chrome.tabs.sendMessage(youtubeVideoTab.id as number, message).catch(error => {
+                speakErrorMessage(error);
+            });
         } else {
             chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn ein Youtube-Video geöffnet wurde.');
         }
     });
+}
+
+/**
+ * speaker error message, if message cant be delivered
+ * */
+function speakErrorMessage(error: any) {
+    console.log('Error: ', error);
+    chrome.tts.speak('Es ist ein Fehler aufgetreten. Probieren Sie es später nochmal.');
 }

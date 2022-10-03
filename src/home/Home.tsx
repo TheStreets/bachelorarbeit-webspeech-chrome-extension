@@ -19,20 +19,18 @@ import {CommandTable} from "../components/CommandTableComponent";
 import {
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
-    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,
-    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2, COMMAND_ACTIVATE_YOUTUBE_SEARCH,
+    COMMAND_ACTIVATE_YOUTUBE_SEARCH,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
-    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_1,
-    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
     COMMAND_MUTE_YOUTUBE_VIDEO_2,
+    COMMAND_OPEN_GOOGLE,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
@@ -40,6 +38,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET,
+    COMMAND_SEARCH_ON_GOOGLE,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY,
@@ -153,14 +152,8 @@ function handleWeatherRequestByCity(city: string, type: string) {
  * */
 function openYoutube(command) {
     console.log(command);
-    chrome.tabs.create({
-        url: 'https://www.youtube.com'
-    }).then(tab => {
-        if (tab.id) {
-            const message: Message = {message: '', type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
-            chrome.tabs.sendMessage(tab.id, message);
-        }
-    });
+    openTab('https://www.youtube.com');
+    command.resetTranscript();
 }
 
 /**
@@ -229,6 +222,9 @@ function changeVolume(volume) {
     connection.postMessage(message);
 }
 
+/**
+ * activate cinema mode
+ * */
 function activateCinemaMode() {
     const message: Message = {
         message: '',
@@ -237,6 +233,9 @@ function activateCinemaMode() {
     connection.postMessage(message);
 }
 
+/**
+ * deactivate cinema mode
+ * */
 function deactivateCinemaMode() {
     const message: Message = {
         message: '',
@@ -245,6 +244,9 @@ function deactivateCinemaMode() {
     connection.postMessage(message);
 }
 
+/**
+ * activate youtube fullscreen
+ * */
 function activateFullScreen() {
     const message: Message = {
         message: '',
@@ -253,6 +255,9 @@ function activateFullScreen() {
     connection.postMessage(message);
 }
 
+/**
+ * deactivate cinema mode
+ * */
 function deactivateFullScreen() {
     const message: Message = {
         message: '',
@@ -261,10 +266,38 @@ function deactivateFullScreen() {
     connection.postMessage(message);
 }
 
-function activateSearch(){
+/**
+ * activate youtube search
+ * */
+function activateSearch() {
     const message: Message = {
         message: '',
         type: MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * open google page
+ * */
+function openGoogle() {
+    openTab('https://google.de');
+}
+
+/**
+ * helper function, open tab and send a message to the background
+ * */
+function openTab(url: string) {
+    chrome.tabs.create({
+        url: url
+    });
+}
+
+function searchOnGoogle(toBeSearched:string) {
+    console.log('Search string: ', toBeSearched);
+    const message: Message  = {
+        message: toBeSearched,
+        type: MessageType.COMMAND_SEARCH_ON_GOOGLE
     }
     connection.postMessage(message);
 }
@@ -387,6 +420,14 @@ function Home() {
             command: COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
             callback: deactivateFullScreen
         },*/
+        {
+            command: COMMAND_OPEN_GOOGLE,
+            callback: openGoogle
+        },
+        {
+            command: COMMAND_SEARCH_ON_GOOGLE,
+            callback: searchOnGoogle
+        },
     ]
     const message: Message = {
         message: '',
