@@ -17,9 +17,10 @@ import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
+    COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1, COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_CURRENT_WEATHER_BY_CITY,
+    COMMAND_CURRENT_WEATHER_BY_CITY, COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU, COMMAND_MUTE_YOUTUBE_VIDEO_1, COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
@@ -27,7 +28,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
-    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET, COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY, COMMAND_UNMUTE_YOUTUBE_VIDEO
@@ -216,6 +217,22 @@ function changeVolume(volume) {
     connection.postMessage(message);
 }
 
+function activateCinemaMode(){
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE
+    }
+    connection.postMessage(message);
+}
+
+function deactivateCinemaMode(){
+    const message:Message ={
+        message: '',
+        type: MessageType.COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -275,10 +292,6 @@ function Home() {
             callback: playOrPauseVideo
         },
         {
-            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_5,
-            callback: playOrPauseVideo
-        },
-        {
             command: COMMAND_START_NEXT_YOUTUBE_VIDEO,
             callback: startNextYoutubeVideo
         },
@@ -301,6 +314,22 @@ function Home() {
         {
             command: COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
             callback: changeVolume
+        },
+        {
+            command: COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
+            callback: activateCinemaMode
+        },
+        {
+            command: COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
+            callback: activateCinemaMode
+        },
+        {
+            command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
+            callback: deactivateCinemaMode
+        },
+        {
+            command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+            callback: deactivateCinemaMode
         },
     ]
     const message:Message = {

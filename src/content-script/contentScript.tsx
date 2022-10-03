@@ -43,8 +43,13 @@ function getYoutubeVideoControls() {
  * helper function, triggers the click on the mute button
  * */
 function handleMuteClick() {
-    const muteButton = Array.from(document.getElementsByClassName('ytp-mute-button'))[0] as HTMLButtonElement;
-    muteButton.click();
+    try {
+        const muteButton = Array.from(document.getElementsByClassName('ytp-mute-button'))[0] as HTMLButtonElement;
+        console.log('Muting/Unmuting video');
+        muteButton.click();
+    } catch (e) {
+        chrome.tts.speak('Leider ist ein Fehler aufgetreten, ich kann Ihre Anfrage nicht bearbeiten.');
+    }
 }
 
 function getInputFields() {
@@ -100,14 +105,22 @@ const App: React.FC<{}> = () => {
                     setComponent(Component.NO_COMPONENT);
                     break;
                 case MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO:
-                    console.log('pausing video');
-                    const playButton = Array.from(document.getElementsByClassName('ytp-play-button'))[0] as HTMLButtonElement;
-                    playButton.click();
+                    try {
+                        console.log('pausing video');
+                        const playButton = Array.from(document.getElementsByClassName('ytp-play-button'))[0] as HTMLButtonElement;
+                        playButton.click();
+                    } catch (e) {
+                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.');
+                    }
                     break;
                 case MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO:
-                    console.log('starting next video');
-                    const nextVideoButton = Array.from(document.getElementsByClassName('ytp-next-button'))[0] as HTMLAnchorElement;
-                    nextVideoButton.click();
+                    try {
+                        console.log('starting next video');
+                        const nextVideoButton = Array.from(document.getElementsByClassName('ytp-next-button'))[0] as HTMLAnchorElement;
+                        nextVideoButton.click();
+                    } catch (e) {
+                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.');
+                    }
                     break;
                 case MessageType.COMMAND_MUTE_YOUTUBE_VIDEO:
                     handleMuteClick();
@@ -118,7 +131,26 @@ const App: React.FC<{}> = () => {
                 case MessageType.COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO:
                     try {
                         const player = document.getElementsByClassName('video-stream html5-main-video')[0] as HTMLVideoElement;
+                        console.log('Changing Volume');
                         player.volume = message.message / 100;
+                    } catch (e) {
+                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
+                    }
+                    break;
+                case MessageType.COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE:
+                    try {
+                        const cinemaModeButton = document.getElementsByClassName('ytp-size-button ytp-button')[0] as HTMLButtonElement;
+                        cinemaModeButton.click();
+                        console.log('cinema mode activated');
+                    } catch (e) {
+                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
+                    }
+                    break;
+                case MessageType.COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE:
+                    try {
+                        const cinemaModeButton = document.getElementsByClassName('ytp-size-button ytp-button')[0] as HTMLButtonElement;
+                        cinemaModeButton.click();
+                        console.log('cinema mode deactivated');
                     } catch (e) {
                         chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
                     }
