@@ -88,8 +88,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE ||
             message.type === MessageType.COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE ||
             message.type === MessageType.COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN ||
-            message.type === MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN
-        ) {
+            message.type === MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN ||
+            message.type === MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH) {
             handleYoutubeVideoPage(message);
         }
     });

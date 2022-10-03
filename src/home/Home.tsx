@@ -20,7 +20,7 @@ import {
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
     COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,
-    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2,
+    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2, COMMAND_ACTIVATE_YOUTUBE_SEARCH,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
@@ -261,6 +261,14 @@ function deactivateFullScreen() {
     connection.postMessage(message);
 }
 
+function activateSearch(){
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -358,6 +366,10 @@ function Home() {
         {
             command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
             callback: deactivateCinemaMode
+        },
+        {
+            command: COMMAND_ACTIVATE_YOUTUBE_SEARCH,
+            callback: activateSearch
         },
         /*{
             command: COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,

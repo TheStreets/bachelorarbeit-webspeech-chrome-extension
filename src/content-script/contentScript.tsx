@@ -172,6 +172,11 @@ const App: React.FC<{}> = () => {
                 case MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN:
                     handleFullScreenClick();
                     break;
+                case MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH:
+                    const searchButton = document.getElementById('voice-search-button') as HTMLDivElement;
+                    const aTag = searchButton.getElementsByClassName('yt-simple-endpoint style-scope ytd-button-renderer')[0] as HTMLAnchorElement;
+                    aTag.click();
+                    break;
                 default:
                     console.log('Wrong component');
             }
