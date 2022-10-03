@@ -134,10 +134,7 @@ const App: React.FC<{}> = () => {
                             player.pause();
                             console.log('pausing video');
                         } else {
-                            player.play().then(value => {
-                                console.log('value: ', value);
-                                console.log('playing video');
-                            });
+                            player.play();
                         }
                     } catch (e) {
                         chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.');
