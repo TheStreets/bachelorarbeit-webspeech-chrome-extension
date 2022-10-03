@@ -38,7 +38,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET,
-    COMMAND_SEARCH_ON_GOOGLE,
+    COMMAND_SEARCH_ON_GOOGLE, COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY,
@@ -302,6 +302,15 @@ function searchOnGoogle(toBeSearched:string) {
     connection.postMessage(message);
 }
 
+function searchOnGoogleAfterSearch(toBeSearched:string) {
+    console.log('Search string: ', toBeSearched);
+    const message: Message  = {
+        message: toBeSearched,
+        type: MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -428,7 +437,12 @@ function Home() {
             command: COMMAND_SEARCH_ON_GOOGLE,
             callback: searchOnGoogle
         },
+        {
+            command: COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
+            callback: searchOnGoogleAfterSearch
+        },
     ]
+
     const message: Message = {
         message: '',
         type: MessageType.SETUP_COMMUNICATION

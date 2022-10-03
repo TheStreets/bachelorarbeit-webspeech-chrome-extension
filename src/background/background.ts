@@ -103,6 +103,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Google zur Verfügung.');
                 }
             });
+        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH) {
+            handleGoogleSearchPage(message);
         }
     });
 });
@@ -134,7 +136,6 @@ function isYoutubeVideoPage(url: string) {
  * helper function that forwards the message to the youtube video page
  * */
 function handleYoutubeVideoPage(message: Message) {
-    console.log()
     getActiveTab().then(youtubeVideoTab => {
         console.log(youtubeVideoTab);
         if (isYoutubeVideoPage(youtubeVideoTab.url as string)) {
@@ -153,4 +154,19 @@ function handleYoutubeVideoPage(message: Message) {
 function speakErrorMessage(error: any) {
     console.log('Error: ', error);
     chrome.tts.speak('Es ist ein Fehler aufgetreten. Probieren Sie es später nochmal.');
+}
+
+/**
+ * helper function that forwards the message to the google search page
+ * */
+function handleGoogleSearchPage(message: Message) {
+    getActiveTab().then(googleSearchedTab => {
+        if (googleSearchedTab.url?.startsWith('https://www.google.de/search?q=')) {
+            chrome.tabs.sendMessage(googleSearchedTab.id as number, message).catch(error => {
+                speakErrorMessage(error);
+            });
+        } else {
+            chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Google zur Verfügung.');
+        }
+    });
 }

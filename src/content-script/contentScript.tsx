@@ -75,7 +75,9 @@ function handleCinemaModeClick() {
     }
 }
 
-
+/**
+ * helper function, puts the search request in the input field and starts the search
+ * */
 function searchOnGoogle(toBeSearched: string) {
     const searchField = document.getElementsByClassName('gLFyf gsfi')[0] as HTMLInputElement;
     searchField.value = toBeSearched;
@@ -84,6 +86,17 @@ function searchOnGoogle(toBeSearched: string) {
     submitButton.click();
 }
 
+/**
+ * helper function, puts the search request in the input field and starts the search again
+ * */
+function searchOnGoogleAfterSearched(toBeSearched: string) {
+    const inputContainer = document.getElementsByClassName('a4bIc')[0] as HTMLDivElement;
+    console.log(document.getElementsByClassName('a4bIc'));
+    const inputField = inputContainer.children.item(2) as HTMLInputElement;
+    inputField.value = toBeSearched;
+    const submitButton = document.getElementsByClassName('Tg7LZd')[0] as HTMLButtonElement;
+    submitButton.click();
+}
 
 function getInputFields() {
     const inputs = document.getElementsByTagName('input');
@@ -190,6 +203,9 @@ const App: React.FC<{}> = () => {
                     break;
                 case MessageType.COMMAND_SEARCH_ON_GOOGLE:
                     searchOnGoogle(message.message);
+                    break;
+                case MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH:
+                    searchOnGoogleAfterSearched(message.message);
                     break;
                 default:
                     console.log('Wrong component');

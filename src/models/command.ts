@@ -40,6 +40,7 @@ export const COMMAND_ACTIVATE_YOUTUBE_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} Such
 // google
 export const COMMAND_OPEN_GOOGLE = `${ASSISTANT_WAKEUP_COMMAND} öffne Google`;
 export const COMMAND_SEARCH_ON_GOOGLE = `${ASSISTANT_WAKEUP_COMMAND} suche nach *`;
+export const COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} neue suche nach *`;
 
 
 export enum CommandType {
