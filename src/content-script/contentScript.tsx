@@ -129,9 +129,16 @@ const App: React.FC<{}> = () => {
                     break;
                 case MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO:
                     try {
-                        console.log('pausing video');
-                        const playButton = Array.from(document.getElementsByClassName('ytp-play-button'))[0] as HTMLButtonElement;
-                        playButton.click();
+                        const player = document.getElementsByClassName('video-stream html5-main-video')[0] as HTMLVideoElement;
+                        if (!player.paused) {
+                            player.pause();
+                            console.log('pausing video');
+                        } else {
+                            player.play().then(value => {
+                                console.log('value: ', value);
+                                console.log('playing video');
+                            });
+                        }
                     } catch (e) {
                         chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.');
                     }
