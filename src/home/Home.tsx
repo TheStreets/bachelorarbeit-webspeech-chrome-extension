@@ -17,24 +17,36 @@ import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
-    COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
-    COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1, COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
+    COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
+    COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,
+    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2,
+    COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
+    COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_CURRENT_WEATHER_BY_CITY, COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_CURRENT_WEATHER_BY_CITY,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_1,
+    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_HOW_ARE_YOU, COMMAND_MUTE_YOUTUBE_VIDEO_1, COMMAND_MUTE_YOUTUBE_VIDEO_2,
+    COMMAND_HOW_ARE_YOU,
+    COMMAND_MUTE_YOUTUBE_VIDEO_1,
+    COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
-    COMMAND_RESET, COMMAND_START_NEXT_YOUTUBE_VIDEO,
+    COMMAND_RESET,
+    COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
-    COMMAND_TODAY_WEATHER_BY_CITY, COMMAND_UNMUTE_YOUTUBE_VIDEO
+    COMMAND_TODAY_WEATHER_BY_CITY,
+    COMMAND_UNMUTE_YOUTUBE_VIDEO
 } from "../models/command";
 
-let connection:any = undefined;
+let connection: any = undefined;
 
 function speak(text: string) {
     chrome.tts.speak(text)
@@ -156,7 +168,7 @@ function openYoutube(command) {
  * */
 function openYoutubeVideo(index) {
     // check if index is one, handle this one specific
-    if(index === 'eins') index = 1;
+    if (index === 'eins') index = 1;
     const message: Message = {message: index, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
     connection.postMessage(message);
 }
@@ -165,7 +177,7 @@ function openYoutubeVideo(index) {
  * pause or start the video
  * */
 function playOrPauseVideo() {
-    const message:Message ={
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO
     }
@@ -176,7 +188,7 @@ function playOrPauseVideo() {
  * starts the next video in the playlist
  * */
 function startNextYoutubeVideo() {
-    const message:Message ={
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO
     }
@@ -187,7 +199,7 @@ function startNextYoutubeVideo() {
  * mutes the video
  * */
 function muteYoutubeVideo() {
-    const message:Message ={
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_MUTE_YOUTUBE_VIDEO
     }
@@ -198,7 +210,7 @@ function muteYoutubeVideo() {
  * unmutes the video
  * */
 function unMuteYoutubeVideo() {
-    const message:Message ={
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO
     }
@@ -210,25 +222,41 @@ function unMuteYoutubeVideo() {
  * */
 function changeVolume(volume) {
     console.log('Volume: ', volume.split('%')[0]);
-    const message:Message ={
+    const message: Message = {
         message: parseInt(volume.split('%')[0]),
         type: MessageType.COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO
     }
     connection.postMessage(message);
 }
 
-function activateCinemaMode(){
-    const message:Message ={
+function activateCinemaMode() {
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE
     }
     connection.postMessage(message);
 }
 
-function deactivateCinemaMode(){
-    const message:Message ={
+function deactivateCinemaMode() {
+    const message: Message = {
         message: '',
         type: MessageType.COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE
+    }
+    connection.postMessage(message);
+}
+
+function activateFullScreen() {
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN
+    }
+    connection.postMessage(message);
+}
+
+function deactivateFullScreen() {
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN
     }
     connection.postMessage(message);
 }
@@ -331,8 +359,24 @@ function Home() {
             command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
             callback: deactivateCinemaMode
         },
+        /*{
+            command: COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,
+            callback: activateFullScreen
+        },
+        {
+            command: COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2,
+            callback: activateFullScreen
+        },
+        {
+            command: COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_1,
+            callback: deactivateFullScreen
+        },
+        {
+            command: COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
+            callback: deactivateFullScreen
+        },*/
     ]
-    const message:Message = {
+    const message: Message = {
         message: '',
         type: MessageType.SETUP_COMMUNICATION
     };

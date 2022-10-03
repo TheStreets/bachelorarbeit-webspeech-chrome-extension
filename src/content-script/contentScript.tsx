@@ -30,25 +30,48 @@ function getYoutubeVideosForSelection() {
 }
 
 /**
- * helper function, gets the controls from the video
- * @return array of youtube control elements
- * */
-function getYoutubeVideoControls() {
-    const leftControls = Array.from(document.getElementsByClassName('ytp-left-controls'));
-    const rightControls = Array.from(document.getElementsByClassName('ytp-right-controls'));
-    return leftControls.concat(rightControls);
-}
-
-/**
  * helper function, triggers the click on the mute button
  * */
 function handleMuteClick() {
-    try {
-        const muteButton = Array.from(document.getElementsByClassName('ytp-mute-button'))[0] as HTMLButtonElement;
-        console.log('Muting/Unmuting video');
+    const player = document.getElementsByClassName('video-stream html5-main-video')[0] as HTMLVideoElement;
+    console.log(player.muted);
+    const muteButton = Array.from(document.getElementsByClassName('ytp-mute-button'))[0] as HTMLButtonElement;
+    if (player.muted) {
         muteButton.click();
+        player.muted = false;
+        console.log('Muting video');
+    } else {
+        player.muted = true;
+        muteButton.click();
+        console.log('UnMuting video');
+    }
+    console.log(player.muted)
+}
+
+/**
+ * helper function, triggers the click on the fullscreen button
+ * */
+function handleFullScreenClick() {
+    try {
+        const fullscreenButton = document.getElementsByClassName('ytp-fullscreen-button ytp-button')[0] as HTMLButtonElement;
+        console.log(fullscreenButton);
+        fullscreenButton.click();
+        console.log('fullscreen activated/deactivated');
     } catch (e) {
-        chrome.tts.speak('Leider ist ein Fehler aufgetreten, ich kann Ihre Anfrage nicht bearbeiten.');
+        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
+    }
+}
+
+/**
+ * helper function, triggers the click on the cinema mode button
+ * */
+function handleCinemaModeClick() {
+    try {
+        const cinemaModeButton = document.getElementsByClassName('ytp-size-button ytp-button')[0] as HTMLButtonElement;
+        cinemaModeButton.click();
+        console.log('cinema mode activated/deactivated');
+    } catch (e) {
+        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
     }
 }
 
@@ -138,22 +161,16 @@ const App: React.FC<{}> = () => {
                     }
                     break;
                 case MessageType.COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE:
-                    try {
-                        const cinemaModeButton = document.getElementsByClassName('ytp-size-button ytp-button')[0] as HTMLButtonElement;
-                        cinemaModeButton.click();
-                        console.log('cinema mode activated');
-                    } catch (e) {
-                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
-                    }
+                    handleCinemaModeClick();
                     break;
                 case MessageType.COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE:
-                    try {
-                        const cinemaModeButton = document.getElementsByClassName('ytp-size-button ytp-button')[0] as HTMLButtonElement;
-                        cinemaModeButton.click();
-                        console.log('cinema mode deactivated');
-                    } catch (e) {
-                        chrome.tts.speak('Ein Fehler ist aufgetreten, es könnte deine Anfrage nicht bearbeitet werden.')
-                    }
+                    handleCinemaModeClick();
+                    break;
+                case MessageType.COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN:
+                    handleFullScreenClick();
+                    break;
+                case MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN:
+                    handleFullScreenClick();
                     break;
                 default:
                     console.log('Wrong component');
