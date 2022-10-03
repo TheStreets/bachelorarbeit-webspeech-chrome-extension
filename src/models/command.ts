@@ -3,13 +3,18 @@ export const ASSISTANT_NAME = 'nami';
 export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 
 // commands
+//introduction
 export const COMMAND_HOW_ARE_YOU = `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`;
+// Utility
 export const COMMAND_RESET = `reset`;
+// Weather
 export const COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`;
 export const COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`;
 export const COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter in den nächsten drei tagen`;
 export const COMMAND_CURRENT_WEATHER_BY_CITY = `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter in *`;
 export const COMMAND_TODAY_WEATHER_BY_CITY = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute in *`;
+
+// youtube
 export const COMMAND_OPEN_YOUTUBE_PAGE = `${ASSISTANT_WAKEUP_COMMAND} öffne youtube`;
 export const COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX = `${ASSISTANT_WAKEUP_COMMAND} öffne video nummer *`;
 export const COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1 = `${ASSISTANT_WAKEUP_COMMAND} video stoppen`;
@@ -32,16 +37,10 @@ export const COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_1 = `${ASSISTANT_WAKEUP_COMMA
 export const COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2 = `${ASSISTANT_WAKEUP_COMMAND} Vollbildschirm beenden`;
 export const COMMAND_ACTIVATE_YOUTUBE_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} Suche aktivieren`;
 
-
-export interface Command {
-    command: string;
-    example: string;
-    commandType: CommandType
-}
-
 export enum CommandType {
     INTRODUCTION,
     UTILITY,
-    WEATHER
+    WEATHER,
+    YOUTUBE
 }
 
