@@ -81,8 +81,7 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Youtube zur Verfügung.');
                 }
             });
-        } else if (
-            message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO ||
+        } else if (message.type === MessageType.COMMAND_PAUSE_OR_PLAY_YOUTUBE_VIDEO ||
             message.type === MessageType.COMMAND_START_NEXT_YOUTUBE_VIDEO ||
             message.type === MessageType.COMMAND_MUTE_YOUTUBE_VIDEO ||
             message.type === MessageType.COMMAND_UNMUTE_YOUTUBE_VIDEO ||
@@ -103,7 +102,14 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Google zur Verfügung.');
                 }
             });
-        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH) {
+        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_IMAGE_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_VIDEOS_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_NEWS_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_SHOPPING_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_ALL_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_FINANCE_RESULT ||
+            message.type === MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT) {
             handleGoogleSearchPage(message);
         }
     });
@@ -166,7 +172,7 @@ function handleGoogleSearchPage(message: Message) {
                 speakErrorMessage(error);
             });
         } else {
-            chrome.tts.speak('Diese Funktion steht nur auf der Homepage von Google zur Verfügung.');
+            chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
         }
     });
 }

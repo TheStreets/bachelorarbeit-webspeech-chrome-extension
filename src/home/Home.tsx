@@ -31,6 +31,25 @@ import {
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
     COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_GOOGLE,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_1,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_2,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_1,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_2,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_1,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_2,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_3,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_1,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_2,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_2,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_1,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
@@ -38,7 +57,8 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET,
-    COMMAND_SEARCH_ON_GOOGLE, COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
+    COMMAND_SEARCH_ON_GOOGLE,
+    COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY,
@@ -159,10 +179,10 @@ function openYoutube(command) {
 /**
  * open youtube video based on the index, from left top side to the right side
  * */
-function openYoutubeVideo(index) {
+function openYoutubeVideo(selectedVideo) {
     // check if index is one, handle this one specific
-    if (index === 'eins') index = 1;
-    const message: Message = {message: index, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
+    if (selectedVideo === 'eins') selectedVideo = 1;
+    const message: Message = {message: selectedVideo, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
     connection.postMessage(message);
 }
 
@@ -293,22 +313,145 @@ function openTab(url: string) {
     });
 }
 
-function searchOnGoogle(toBeSearched:string) {
+/**
+ * helper function, send message to background
+ * */
+function searchOnGoogle(toBeSearched: string) {
     console.log('Search string: ', toBeSearched);
-    const message: Message  = {
+    const message: Message = {
         message: toBeSearched,
         type: MessageType.COMMAND_SEARCH_ON_GOOGLE
     }
     connection.postMessage(message);
 }
 
-function searchOnGoogleAfterSearch(toBeSearched:string) {
+/**
+ * helper function, send message to background
+ * */
+function searchOnGoogleAfterSearch(toBeSearched: string) {
     console.log('Search string: ', toBeSearched);
-    const message: Message  = {
+    const message: Message = {
         message: toBeSearched,
         type: MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH
     }
     connection.postMessage(message);
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openImageResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_IMAGE_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openVideoResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_VIDEOS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openShoppingResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_SHOPPING_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openNewsResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_NEWS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openAllResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_ALL_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openMapsResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_MAPS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openBookResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_BOOK_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openFinanceResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_FINANCE_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openFLyResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
 }
 
 function Home() {
@@ -440,6 +583,42 @@ function Home() {
         {
             command: COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
             callback: searchOnGoogleAfterSearch
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1, COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2],
+            callback: openImageResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1, COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2],
+            callback: openVideoResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_1, COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2],
+            callback: openShoppingResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_NEWS_RESULT_1, COMMAND_OPEN_GOOGLE_NEWS_RESULT_2],
+            callback: openNewsResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_ALL_RESULT_1, COMMAND_OPEN_GOOGLE_ALL_RESULT_2],
+            callback: openAllResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_MAPS_RESULT_1, COMMAND_OPEN_GOOGLE_MAPS_RESULT_2],
+            callback: openMapsResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_BOOK_RESULT_1, COMMAND_OPEN_GOOGLE_BOOK_RESULT_2],
+            callback: openBookResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_FINANCE_RESULT_1, COMMAND_OPEN_GOOGLE_FINANCE_RESULT_2, COMMAND_OPEN_GOOGLE_FINANCE_RESULT_3],
+            callback: openFinanceResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_FLY_RESULT_1, COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3],
+            callback: openFLyResults
         },
     ]
 
