@@ -19,20 +19,37 @@ import {CommandTable} from "../components/CommandTableComponent";
 import {
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
-    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_1,
-    COMMAND_ACTIVATE_YOUTUBE_FULLSCREEN_2, COMMAND_ACTIVATE_YOUTUBE_SEARCH,
+    COMMAND_ACTIVATE_YOUTUBE_SEARCH,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
-    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_1,
-    COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
-    COMMAND_MUTE_YOUTUBE_VIDEO_2,
+    COMMAND_MUTE_YOUTUBE_VIDEO_2, COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
+    COMMAND_OPEN_GOOGLE,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_1,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_2, COMMAND_OPEN_GOOGLE_ALL_RESULT_3,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_1,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_2, COMMAND_OPEN_GOOGLE_BOOK_RESULT_3,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_1,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_2,
+    COMMAND_OPEN_GOOGLE_FINANCE_RESULT_3,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_1,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2, COMMAND_OPEN_GOOGLE_IMAGE_RESULT_3,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_2, COMMAND_OPEN_GOOGLE_MAPS_RESULT_3,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_2, COMMAND_OPEN_GOOGLE_NEWS_RESULT_3,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_1,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2, COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_3,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2, COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_3,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
@@ -40,6 +57,8 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET,
+    COMMAND_SEARCH_ON_GOOGLE,
+    COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY,
@@ -153,23 +172,17 @@ function handleWeatherRequestByCity(city: string, type: string) {
  * */
 function openYoutube(command) {
     console.log(command);
-    chrome.tabs.create({
-        url: 'https://www.youtube.com'
-    }).then(tab => {
-        if (tab.id) {
-            const message: Message = {message: '', type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
-            chrome.tabs.sendMessage(tab.id, message);
-        }
-    });
+    openTab('https://www.youtube.com');
+    command.resetTranscript();
 }
 
 /**
  * open youtube video based on the index, from left top side to the right side
  * */
-function openYoutubeVideo(index) {
+function openYoutubeVideo(selectedVideo) {
     // check if index is one, handle this one specific
-    if (index === 'eins') index = 1;
-    const message: Message = {message: index, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
+    if (selectedVideo === 'eins') selectedVideo = 1;
+    const message: Message = {message: selectedVideo, type: MessageType.COMMAND_YOUTUBE_VIDEO_SELECTION_ON_DESKTOP};
     connection.postMessage(message);
 }
 
@@ -229,6 +242,9 @@ function changeVolume(volume) {
     connection.postMessage(message);
 }
 
+/**
+ * activate cinema mode
+ * */
 function activateCinemaMode() {
     const message: Message = {
         message: '',
@@ -237,6 +253,9 @@ function activateCinemaMode() {
     connection.postMessage(message);
 }
 
+/**
+ * deactivate cinema mode
+ * */
 function deactivateCinemaMode() {
     const message: Message = {
         message: '',
@@ -245,6 +264,9 @@ function deactivateCinemaMode() {
     connection.postMessage(message);
 }
 
+/**
+ * activate youtube fullscreen
+ * */
 function activateFullScreen() {
     const message: Message = {
         message: '',
@@ -253,6 +275,9 @@ function activateFullScreen() {
     connection.postMessage(message);
 }
 
+/**
+ * deactivate cinema mode
+ * */
 function deactivateFullScreen() {
     const message: Message = {
         message: '',
@@ -261,12 +286,185 @@ function deactivateFullScreen() {
     connection.postMessage(message);
 }
 
-function activateSearch(){
+/**
+ * activate youtube search
+ * */
+function activateSearch() {
     const message: Message = {
         message: '',
         type: MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH
     }
     connection.postMessage(message);
+}
+
+/**
+ * open google page
+ * */
+function openGoogle() {
+    openTab('https://google.de');
+}
+
+/**
+ * helper function, open tab and send a message to the background
+ * */
+function openTab(url: string) {
+    chrome.tabs.create({
+        url: url
+    });
+}
+
+/**
+ * helper function, send message to background
+ * */
+function searchOnGoogle(toBeSearched: string) {
+    console.log('Search string: ', toBeSearched);
+    const message: Message = {
+        message: toBeSearched,
+        type: MessageType.COMMAND_SEARCH_ON_GOOGLE
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * helper function, send message to background
+ * */
+function searchOnGoogleAfterSearch(toBeSearched: string) {
+    console.log('Search string: ', toBeSearched);
+    const message: Message = {
+        message: toBeSearched,
+        type: MessageType.COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openImageResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_IMAGE_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openVideoResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_VIDEOS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openShoppingResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_SHOPPING_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openNewsResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_NEWS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openAllResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_ALL_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openMapsResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_MAPS_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openBookResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_BOOK_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openFinanceResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_FINANCE_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openFLyResults(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openGmailOnGoogleHomepage(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
 }
 
 function Home() {
@@ -387,7 +585,60 @@ function Home() {
             command: COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN_2,
             callback: deactivateFullScreen
         },*/
+        {
+            command: COMMAND_OPEN_GOOGLE,
+            callback: openGoogle
+        },
+        {
+            command: COMMAND_SEARCH_ON_GOOGLE,
+            callback: searchOnGoogle
+        },
+        {
+            command: COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
+            callback: searchOnGoogleAfterSearch
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1, COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2, COMMAND_OPEN_GOOGLE_IMAGE_RESULT_3],
+            callback: openImageResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1, COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2, COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_3],
+            callback: openVideoResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_1, COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2, COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_3],
+            callback: openShoppingResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_NEWS_RESULT_1, COMMAND_OPEN_GOOGLE_NEWS_RESULT_2, COMMAND_OPEN_GOOGLE_NEWS_RESULT_3],
+            callback: openNewsResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_ALL_RESULT_1, COMMAND_OPEN_GOOGLE_ALL_RESULT_2, COMMAND_OPEN_GOOGLE_ALL_RESULT_3],
+            callback: openAllResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_MAPS_RESULT_1, COMMAND_OPEN_GOOGLE_MAPS_RESULT_2, COMMAND_OPEN_GOOGLE_MAPS_RESULT_3],
+            callback: openMapsResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_BOOK_RESULT_1, COMMAND_OPEN_GOOGLE_BOOK_RESULT_2, COMMAND_OPEN_GOOGLE_BOOK_RESULT_3],
+            callback: openBookResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_FINANCE_RESULT_1, COMMAND_OPEN_GOOGLE_FINANCE_RESULT_2, COMMAND_OPEN_GOOGLE_FINANCE_RESULT_3],
+            callback: openFinanceResults
+        },
+        {
+            command: [COMMAND_OPEN_GOOGLE_FLY_RESULT_1, COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3],
+            callback: openFLyResults
+        },
+        {
+            command: COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
+            callback: openGmailOnGoogleHomepage
+        },
     ]
+
     const message: Message = {
         message: '',
         type: MessageType.SETUP_COMMUNICATION
