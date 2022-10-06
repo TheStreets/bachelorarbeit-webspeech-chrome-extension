@@ -112,9 +112,47 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_OPEN_GOOGLE_FINANCE_RESULT ||
             message.type === MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT) {
             handleGoogleSearchPage(message);
+        } else if (message.type === MessageType.COMMAND_GO_BACK) {
+            handleBrowserNavigation('back')
+        } else if (message.type === MessageType.COMMAND_GO_FORWARD) {
+            handleBrowserNavigation('forward');
         }
     });
 });
+
+
+/**
+ * helper function, handle back navigation or forward navigation
+ * @param action possible value: 'back', 'forward'
+ * */
+function handleBrowserNavigation(action: string) {
+    try {
+        getActiveTab().then(activeTab => {
+            if (activeTab) {
+                const url = activeTab.url;
+                console.log('Url: ', url);
+                if (url && url !== getExtensionUrl()) {
+                    if (action === 'back') {
+                        chrome.tabs.goBack().catch(reason => {
+                            speakErrorMessage('Es gibt keine Seite, die ich nach zurück springen kann.');
+                        });
+                    } else {
+                        chrome.tabs.goForward().catch(reason => {
+                            speakErrorMessage('Es gibt keine Seite, die ich nach vorne springen kann.');
+                        });
+                    }
+                } else {
+                    speakErrorMessage('Ihre Anfrage konnte nicht bearbeitet werden. Überprüfen Sie, dass Sie sich nicht auf die Seite der Applikation befinden.');
+                }
+            } else {
+                speakErrorMessage();
+            }
+        });
+    } catch (e) {
+        speakErrorMessage();
+    }
+}
+
 
 /**
  * helper function, gets the active tab
@@ -158,9 +196,9 @@ function handleYoutubeVideoPage(message: Message) {
 /**
  * speaker error message, if message cant be delivered
  * */
-function speakErrorMessage(error: any) {
+function speakErrorMessage(error: string = 'Es ist ein Fehler aufgetreten. Probieren Sie es zu einem späteren Zeitpunkt noch einmal.') {
     console.log('Error: ', error);
-    chrome.tts.speak('Es ist ein Fehler aufgetreten. Probieren Sie es später nochmal.');
+    chrome.tts.speak(error);
 }
 
 /**
@@ -173,7 +211,7 @@ function handleGoogleSearchPage(message: Message) {
                 speakErrorMessage(error);
             });
         } else {
-            chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
+            speakErrorMessage('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
         }
     });
 }

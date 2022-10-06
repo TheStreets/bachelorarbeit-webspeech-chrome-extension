@@ -27,6 +27,10 @@ import {
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_GO_BACK_1,
+    COMMAND_GO_BACK_2,
+    COMMAND_GO_BACK_3,
+    COMMAND_GO_FORWARD_1, COMMAND_GO_FORWARD_2, COMMAND_GO_FORWARD_3,
     COMMAND_HOW_ARE_YOU,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
     COMMAND_MUTE_YOUTUBE_VIDEO_2,
@@ -478,6 +482,9 @@ function openGmailOnGoogleHomepage(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, opens the website in a new tab
+ * */
 function openWebsite(website) {
     console.log(website);
     try {
@@ -485,6 +492,32 @@ function openWebsite(website) {
     } catch (e) {
         speak('Es ist leider ein Fehler aufgetreten. Bitte versuchen Sie es nochmal.')
     }
+}
+
+/**
+ * helper function, send message to background
+ * */
+function goBack(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_GO_BACK
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function goForward(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_GO_FORWARD
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
 }
 
 function Home() {
@@ -660,6 +693,14 @@ function Home() {
         {
             command: [COMMAND_OPEN_WEBSITE_1, COMMAND_OPEN_WEBSITE_2],
             callback: openWebsite
+        },
+        {
+            command: [COMMAND_GO_BACK_1, COMMAND_GO_BACK_2, COMMAND_GO_BACK_3],
+            callback: goBack
+        },
+        {
+            command: [COMMAND_GO_FORWARD_1, COMMAND_GO_FORWARD_2, COMMAND_GO_FORWARD_3],
+            callback: goForward
         },
     ]
 
