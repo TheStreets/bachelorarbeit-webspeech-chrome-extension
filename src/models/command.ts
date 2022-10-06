@@ -6,7 +6,9 @@ export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 //introduction
 export const COMMAND_HOW_ARE_YOU = `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`;
 // Utility
-export const COMMAND_RESET = `reset`;
+export const COMMAND_RESET_1 = `reset`;
+export const COMMAND_RESET_2 = `clear`;
+export const COMMAND_RESET_3 = `alles löschen`;
 // Weather
 export const COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`;
 export const COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`;
@@ -82,6 +84,8 @@ export const COMMAND_GO_FORWARD_2 = `${ASSISTANT_WAKEUP_COMMAND} vorwärts`;
 export const COMMAND_GO_FORWARD_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite vor`;
 export const COMMAND_DUPLICATE_1 = `${ASSISTANT_WAKEUP_COMMAND} Seite duplizieren`;
 export const COMMAND_DUPLICATE_2 = `${ASSISTANT_WAKEUP_COMMAND} Seite kopieren`;
+export const COMMAND_MOVE_TAB_TO_FIRST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Anfang bewegen`;
+export const COMMAND_MOVE_TAB_TO_LAST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Ende bewegen`;
 
 
 export enum CommandType {
