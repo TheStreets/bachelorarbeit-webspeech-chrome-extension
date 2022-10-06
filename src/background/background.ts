@@ -92,7 +92,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_DEACTIVATE_YOUTUBE_FULLSCREEN ||
             message.type === MessageType.COMMAND_ACTIVATE_YOUTUBE_SEARCH) {
             handleYoutubeVideoPage(message);
-        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE) {
+        } else if (message.type === MessageType.COMMAND_SEARCH_ON_GOOGLE ||
+            message.type === MessageType.COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE) {
             getActiveTab().then(googleTab => {
                 if (googleTab.url?.startsWith('https://www.google.de')) {
                     chrome.tabs.sendMessage(googleTab.id as number, message).catch(error => {

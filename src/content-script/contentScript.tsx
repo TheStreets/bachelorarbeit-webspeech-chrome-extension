@@ -316,6 +316,24 @@ function handleGoogleRequests(message: Message, setComponent: Dispatch<SetStateA
         case MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT:
             openGoogleResults('flüge');
             break;
+        case MessageType.COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE:
+            openGmailOnGoogleHomepage();
+            break;
+    }
+}
+
+function openGmailOnGoogleHomepage() {
+    try {
+        const gmailAnchorTags = document.getElementsByClassName('gb_d');
+        const anchorTags = Array.from(gmailAnchorTags);
+        const filtered = anchorTags.filter(element => element.nodeName === 'A');
+        filtered.forEach(anchor => {
+            if ((anchor as HTMLAnchorElement).innerText === 'Gmail') {
+                (anchor as HTMLAnchorElement).click();
+            }
+        });
+    } catch (e) {
+        speakErrorMessage()
     }
 }
 

@@ -29,7 +29,7 @@ import {
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_HOW_ARE_YOU,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
-    COMMAND_MUTE_YOUTUBE_VIDEO_2,
+    COMMAND_MUTE_YOUTUBE_VIDEO_2, COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
     COMMAND_OPEN_GOOGLE,
     COMMAND_OPEN_GOOGLE_ALL_RESULT_1,
     COMMAND_OPEN_GOOGLE_ALL_RESULT_2, COMMAND_OPEN_GOOGLE_ALL_RESULT_3,
@@ -454,6 +454,19 @@ function openFLyResults(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function openGmailOnGoogleHomepage(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -619,6 +632,10 @@ function Home() {
         {
             command: [COMMAND_OPEN_GOOGLE_FLY_RESULT_1, COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3],
             callback: openFLyResults
+        },
+        {
+            command: COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
+            callback: openGmailOnGoogleHomepage
         },
     ]
 
