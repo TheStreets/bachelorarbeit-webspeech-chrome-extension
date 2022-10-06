@@ -71,6 +71,10 @@ export const COMMAND_OPEN_GOOGLE_FLY_RESULT_3 = `${ASSISTANT_WAKEUP_COMMAND} öf
 export const COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE = `${ASSISTANT_WAKEUP_COMMAND} öffne Gmail`;
 
 
+// browser control
+export const COMMAND_OPEN_WEBSITE_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne die website *`;
+export const COMMAND_OPEN_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne die webseite *`;
+
 export enum CommandType {
     INTRODUCTION,
     UTILITY,
