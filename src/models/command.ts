@@ -74,12 +74,14 @@ export const COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE = `${ASSISTANT_WAKEUP_COMMAND
 // browser control
 export const COMMAND_OPEN_WEBSITE_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne die website *`;
 export const COMMAND_OPEN_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne die webseite *`;
-export const COMMAND_GO_BACK_1 = `${ASSISTANT_WAKEUP_COMMAND} seite zurück springen`;
+export const COMMAND_GO_BACK_1 = `${ASSISTANT_WAKEUP_COMMAND} seite zurückspringen`;
 export const COMMAND_GO_BACK_2 = `${ASSISTANT_WAKEUP_COMMAND} zurück`;
 export const COMMAND_GO_BACK_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite zurück`;
 export const COMMAND_GO_FORWARD_1 = `${ASSISTANT_WAKEUP_COMMAND} seite vorwärts`;
 export const COMMAND_GO_FORWARD_2 = `${ASSISTANT_WAKEUP_COMMAND} vorwärts`;
 export const COMMAND_GO_FORWARD_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite vor`;
+export const COMMAND_DUPLICATE_1 = `${ASSISTANT_WAKEUP_COMMAND} Seite duplizieren`;
+export const COMMAND_DUPLICATE_2 = `${ASSISTANT_WAKEUP_COMMAND} Seite kopieren`;
 
 
 export enum CommandType {

@@ -116,6 +116,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserNavigation('back')
         } else if (message.type === MessageType.COMMAND_GO_FORWARD) {
             handleBrowserNavigation('forward');
+        }else if (message.type === MessageType.COMMAND_DUPLICATE_PAGE) {
+            handleBrowserNavigation('duplicate');
         }
     });
 });
@@ -123,7 +125,7 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
 
 /**
  * helper function, handle back navigation or forward navigation
- * @param action possible value: 'back', 'forward'
+ * @param action possible value: 'back', 'forward', 'duplicate'
  * */
 function handleBrowserNavigation(action: string) {
     try {
@@ -136,13 +138,15 @@ function handleBrowserNavigation(action: string) {
                         chrome.tabs.goBack().catch(reason => {
                             speakErrorMessage('Es gibt keine Seite, die ich nach zurück springen kann.');
                         });
-                    } else {
+                    } else if(action === 'forward') {
                         chrome.tabs.goForward().catch(reason => {
                             speakErrorMessage('Es gibt keine Seite, die ich nach vorne springen kann.');
                         });
+                    } else if(action === 'duplicate') {
+                        chrome.tabs.duplicate(activeTab.id as number);
                     }
                 } else {
-                    speakErrorMessage('Ihre Anfrage konnte nicht bearbeitet werden. Überprüfen Sie, dass Sie sich nicht auf die Seite der Applikation befinden.');
+                    speakErrorMessage('Ihre Anfrage konnte nicht bearbeitet werden. Überprüfen Sie, dass Sie sich nicht auf die Seite des Programms befinden.');
                 }
             } else {
                 speakErrorMessage();

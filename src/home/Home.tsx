@@ -25,7 +25,7 @@ import {
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
-    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2, COMMAND_DUPLICATE_1, COMMAND_DUPLICATE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_GO_BACK_1,
     COMMAND_GO_BACK_2,
@@ -520,6 +520,19 @@ function goForward(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function duplicatePage(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DUPLICATE_PAGE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -701,6 +714,10 @@ function Home() {
         {
             command: [COMMAND_GO_FORWARD_1, COMMAND_GO_FORWARD_2, COMMAND_GO_FORWARD_3],
             callback: goForward
+        },
+        {
+            command: [COMMAND_DUPLICATE_1, COMMAND_DUPLICATE_2],
+            callback: duplicatePage
         },
     ]
 
