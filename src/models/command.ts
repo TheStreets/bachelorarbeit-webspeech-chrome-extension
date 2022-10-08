@@ -90,6 +90,10 @@ export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Ta
 export const COMMAND_MOVE_TAB_TO_RIGHT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach rechts bewegen`;
 export const COMMAND_MOVE_TAB_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} Tab in ein neues Fenster bewegen`;
 export const COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} alle Tabs zusammenfügen`;
+export const COMMAND_OPEN_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab nummer :index`;
+export const COMMAND_OPEN_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab mit der nummer :index`;
+export const COMMAND_OPEN_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte mit der nummer :index`;
+export const COMMAND_OPEN_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte nummer :index`;
 
 
 export enum CommandType {

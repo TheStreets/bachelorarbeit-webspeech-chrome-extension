@@ -1,7 +1,6 @@
 import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
-import Tab = chrome.tabs.Tab;
 
 
 /**
@@ -65,6 +64,7 @@ function createContextMenus() {
         contexts: ['selection']
     });
 }
+
 
 /**
  * message listener for the communication between the open extension and the content script
@@ -132,6 +132,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserTabMovement('new_window');
         } else if (message.type === MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW) {
             handleBrowserTabMovement('all_to_new_window');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB) {
+            openBrowserTab(message);
         }
     });
 });
@@ -335,5 +337,17 @@ function handleGoogleSearchPage(message: Message) {
 function moveTabToPosition(theTabToBeMoved: number, toPosition: number) {
     chrome.tabs.move(theTabToBeMoved, {index: toPosition}).catch(reason => {
         speakErrorMessage();
+    });
+}
+
+/**
+ * helper function, openbrowser tab with the given number
+ * */
+function openBrowserTab(message: Message) {
+    console.log(message);
+    const index: number = message.message;
+    chrome.tabs.query({currentWindow: true}, tabs => {
+        chrome.tabs.update(tabs[index].id as number, {active: true})
+            .catch(e => speakErrorMessage('Es ist ein Fehler aufgetreten. Bitte wähle eine gültige Registerkarte.'));
     });
 }

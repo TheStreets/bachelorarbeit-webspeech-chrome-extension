@@ -70,6 +70,7 @@ import {
     COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1,
     COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2,
     COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_3,
+    COMMAND_OPEN_TAB_1, COMMAND_OPEN_TAB_2, COMMAND_OPEN_TAB_3, COMMAND_OPEN_TAB_4,
     COMMAND_OPEN_WEBSITE_1,
     COMMAND_OPEN_WEBSITE_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
@@ -620,6 +621,18 @@ function moveAllTabsToNewWindow(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function openTabWithNumber(index) {
+    console.log('Open tab with number: ', index);
+    const message: Message = {
+        message: index,
+        type: MessageType.COMMAND_OPEN_TAB
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -829,6 +842,10 @@ function Home() {
         {
             command: [COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW],
             callback: moveAllTabsToNewWindow
+        },
+        {
+            command: [COMMAND_OPEN_TAB_1, COMMAND_OPEN_TAB_2, COMMAND_OPEN_TAB_3, COMMAND_OPEN_TAB_4],
+            callback: openTabWithNumber
         },
     ]
 
