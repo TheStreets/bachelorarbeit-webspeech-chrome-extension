@@ -94,6 +94,10 @@ export const COMMAND_OPEN_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab nummer
 export const COMMAND_OPEN_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab mit der nummer :index`;
 export const COMMAND_OPEN_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte mit der nummer :index`;
 export const COMMAND_OPEN_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte nummer :index`;
+export const COMMAND_CLOSE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} tab schließen`;
+export const COMMAND_CLOSE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte schließen`;
+export const COMMAND_CLOSE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} schließe registerkarte`;
+export const COMMAND_CLOSE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} schließe den tab`;
 
 
 export enum CommandType {

@@ -134,6 +134,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserTabMovement('all_to_new_window');
         } else if (message.type === MessageType.COMMAND_OPEN_TAB) {
             openBrowserTab(message);
+        } else if (message.type === MessageType.COMMAND_CLOSE_TAB) {
+            closeBrowserTab('active');
         }
     });
 });
@@ -350,4 +352,17 @@ function openBrowserTab(message: Message) {
         chrome.tabs.update(tabs[index].id as number, {active: true})
             .catch(e => speakErrorMessage('Es ist ein Fehler aufgetreten. Bitte wähle eine gültige Registerkarte.'));
     });
+}
+
+/**
+ * helper function, close the active tab
+ * @param action values: 'active', 'all'
+ * */
+function closeBrowserTab(action: string) {
+    if (action === 'active') {
+        getActiveTab().then(activeTab => {
+            const id: number = activeTab?.id as number;
+            chrome.tabs.remove(id).catch((e) => speakErrorMessage());
+        });
+    }
 }
