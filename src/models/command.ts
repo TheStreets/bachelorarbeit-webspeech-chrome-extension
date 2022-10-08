@@ -98,6 +98,12 @@ export const COMMAND_CLOSE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} tab schließen`;
 export const COMMAND_CLOSE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte schließen`;
 export const COMMAND_CLOSE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} schließe registerkarte`;
 export const COMMAND_CLOSE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} schließe den tab`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle tabs`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle registerkarten`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3 = `${ASSISTANT_WAKEUP_COMMAND} alle registerkarten schließen`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4 = `${ASSISTANT_WAKEUP_COMMAND} alle tabs schließen`;
+export const COMMAND_CLOSE_ALL_WINDOWS_1 = `${ASSISTANT_WAKEUP_COMMAND} alle fenster schließen`;
+export const COMMAND_CLOSE_ALL_WINDOWS_2 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle fenster`;
 
 
 export enum CommandType {

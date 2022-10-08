@@ -135,7 +135,11 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         } else if (message.type === MessageType.COMMAND_OPEN_TAB) {
             openBrowserTab(message);
         } else if (message.type === MessageType.COMMAND_CLOSE_TAB) {
-            closeBrowserTab('active');
+            handleBrowserClosing('active');
+        } else if (message.type === MessageType.COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW) {
+            handleBrowserClosing('current_window');
+        } else if (message.type === MessageType.COMMAND_CLOSE_ALL_WINDOWS) {
+            handleBrowserClosing('all_windows');
         }
     });
 });
@@ -356,13 +360,26 @@ function openBrowserTab(message: Message) {
 
 /**
  * helper function, close the active tab
- * @param action values: 'active', 'all'
+ * @param action values: 'active', 'current_window'
  * */
-function closeBrowserTab(action: string) {
+function handleBrowserClosing(action: string) {
     if (action === 'active') {
         getActiveTab().then(activeTab => {
             const id: number = activeTab?.id as number;
             chrome.tabs.remove(id).catch((e) => speakErrorMessage());
+        });
+    } else if (action === 'current_window') {
+        chrome.windows.getCurrent().then(window => {
+            console.log('Remove window: ', window.id as number);
+            chrome.windows.remove(window.id as number, () => {
+            });
+        }).catch(e => speakErrorMessage());
+    } else if (action === 'all_windows') {
+        chrome.windows.getAll().then(windows => {
+            windows.map(window => {
+                chrome.windows.remove(window.id as number, () => {
+                });
+            });
         });
     }
 }

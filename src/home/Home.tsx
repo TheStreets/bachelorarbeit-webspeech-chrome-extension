@@ -22,6 +22,10 @@ import {
     COMMAND_ACTIVATE_YOUTUBE_SEARCH,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4, COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2,
     COMMAND_CLOSE_TAB_1,
     COMMAND_CLOSE_TAB_2,
     COMMAND_CLOSE_TAB_3,
@@ -621,6 +625,19 @@ function moveTabToNewWindow(command) {
 /**
  * helper function, send message to background
  * */
+function closeAllTabs(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
 function moveAllTabsToNewWindow(command) {
     console.log(command);
     const message: Message = {
@@ -651,6 +668,19 @@ function closeTab(command) {
     const message: Message = {
         message: '',
         type: MessageType.COMMAND_CLOSE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function closeAllWindows(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_CLOSE_ALL_WINDOWS
     }
     connection.postMessage(message);
     command.resetTranscript();
@@ -873,6 +903,15 @@ function Home() {
         {
             command: [COMMAND_CLOSE_TAB_1, COMMAND_CLOSE_TAB_2, COMMAND_CLOSE_TAB_3, COMMAND_CLOSE_TAB_4],
             callback: closeTab
+        },
+        {
+            command: [COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1, COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2,
+                COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3, COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4],
+            callback: closeAllTabs
+        },
+        {
+            command: [COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2],
+            callback: closeAllWindows
         },
     ]
 
