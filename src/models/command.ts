@@ -76,14 +76,17 @@ export const COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE = `${ASSISTANT_WAKEUP_COMMAND
 // browser control
 export const COMMAND_OPEN_WEBSITE_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne die website *`;
 export const COMMAND_OPEN_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne die webseite *`;
+
 export const COMMAND_GO_BACK_1 = `${ASSISTANT_WAKEUP_COMMAND} seite zurückspringen`;
 export const COMMAND_GO_BACK_2 = `${ASSISTANT_WAKEUP_COMMAND} zurück`;
 export const COMMAND_GO_BACK_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite zurück`;
 export const COMMAND_GO_FORWARD_1 = `${ASSISTANT_WAKEUP_COMMAND} seite vorwärts`;
 export const COMMAND_GO_FORWARD_2 = `${ASSISTANT_WAKEUP_COMMAND} vorwärts`;
 export const COMMAND_GO_FORWARD_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite vor`;
+
 export const COMMAND_DUPLICATE_1 = `${ASSISTANT_WAKEUP_COMMAND} Seite duplizieren`;
 export const COMMAND_DUPLICATE_2 = `${ASSISTANT_WAKEUP_COMMAND} Seite kopieren`;
+
 export const COMMAND_MOVE_TAB_TO_FIRST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Anfang bewegen`;
 export const COMMAND_MOVE_TAB_TO_LAST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Ende bewegen`;
 export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach links bewegen`;
@@ -102,11 +105,11 @@ export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMA
 export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne linken tab`;
 export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} linken tab öffnen`;
 export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte links öffnen`;
-
 export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechte registerkarte`;
 export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechten tab`;
 export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} rechten tab öffnen`;
 export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte rechts öffnen`;
+
 export const COMMAND_CLOSE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} tab schließen`;
 export const COMMAND_CLOSE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte schließen`;
 export const COMMAND_CLOSE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} schließe registerkarte`;
