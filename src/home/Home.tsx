@@ -38,7 +38,7 @@ import {
     COMMAND_HOW_ARE_YOU,
     COMMAND_MOVE_TAB_TO_FIRST_POSITION,
     COMMAND_MOVE_TAB_TO_LAST_POSITION,
-    COMMAND_MOVE_TAB_TO_LEFT_POSITION, COMMAND_MOVE_TAB_TO_RIGHT_POSITION,
+    COMMAND_MOVE_TAB_TO_LEFT_POSITION, COMMAND_MOVE_TAB_TO_NEW_WINDOW, COMMAND_MOVE_TAB_TO_RIGHT_POSITION,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
     COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
@@ -594,6 +594,19 @@ function moveTabToRightPosition(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function moveTabToNewWindow(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_NEW_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -795,6 +808,10 @@ function Home() {
         {
             command: [COMMAND_MOVE_TAB_TO_RIGHT_POSITION],
             callback: moveTabToRightPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_NEW_WINDOW],
+            callback: moveTabToNewWindow
         },
     ]
 

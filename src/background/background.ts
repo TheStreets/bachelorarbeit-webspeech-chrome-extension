@@ -114,7 +114,7 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT) {
             handleGoogleSearchPage(message);
         } else if (message.type === MessageType.COMMAND_GO_BACK) {
-            handleBrowserNavigation('back')
+            handleBrowserNavigation('back');
         } else if (message.type === MessageType.COMMAND_GO_FORWARD) {
             handleBrowserNavigation('forward');
         } else if (message.type === MessageType.COMMAND_DUPLICATE_PAGE) {
@@ -127,6 +127,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserTabMovement('move_left');
         } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_RIGHT_POSITION) {
             handleBrowserTabMovement('move_right');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_NEW_WINDOW) {
+            handleBrowserTabMovement('new_window');
         }
     });
 });
@@ -207,6 +209,30 @@ function handleBrowserTabMovement(action: string) {
                     }
                 }
             });
+        } else if (action === 'new_window') {
+            try {
+                chrome.windows.getCurrent(oldWindow => {
+                    chrome.windows.create({
+                        top: oldWindow.top,
+                        left: oldWindow.left,
+                        width: oldWindow.width,
+                        height: oldWindow.height,
+                        focused: false
+                    }, window => {
+                        getActiveTab().then(activeTab => {
+                            const id: number = activeTab.id as number;
+                            if (id) {
+                                chrome.tabs.move(id, {index: 0, windowId: window?.id}).then(tab => {
+                                    chrome.windows.update(window?.id as number, {state: oldWindow.state})
+                                        .catch(error => speakErrorMessage());
+                                });
+                            }
+                        }).catch(error => speakErrorMessage());
+                    });
+                });
+            } catch (e) {
+                speakErrorMessage()
+            }
         }
     });
 }
@@ -276,8 +302,8 @@ function handleGoogleSearchPage(message: Message) {
 /**
  * helper function, moves the tab to the position
  * */
-function moveTabToPosition(fromPosition: number, toPosition: number) {
-    chrome.tabs.move(fromPosition, {index: toPosition}).catch(reason => {
+function moveTabToPosition(theTabToBeMoved: number, toPosition: number) {
+    chrome.tabs.move(theTabToBeMoved, {index: toPosition}).catch(reason => {
         speakErrorMessage();
     });
 }
