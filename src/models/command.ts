@@ -6,7 +6,9 @@ export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 //introduction
 export const COMMAND_HOW_ARE_YOU = `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`;
 // Utility
-export const COMMAND_RESET = `reset`;
+export const COMMAND_RESET_1 = `reset`;
+export const COMMAND_RESET_2 = `clear`;
+export const COMMAND_RESET_3 = `alles löschen`;
 // Weather
 export const COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`;
 export const COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`;
@@ -71,10 +73,60 @@ export const COMMAND_OPEN_GOOGLE_FLY_RESULT_3 = `${ASSISTANT_WAKEUP_COMMAND} öf
 export const COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE = `${ASSISTANT_WAKEUP_COMMAND} öffne Gmail`;
 
 
+// browser control
+export const COMMAND_OPEN_WEBSITE_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne die website *`;
+export const COMMAND_OPEN_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne die webseite *`;
+
+export const COMMAND_GO_BACK_1 = `${ASSISTANT_WAKEUP_COMMAND} seite zurückspringen`;
+export const COMMAND_GO_BACK_2 = `${ASSISTANT_WAKEUP_COMMAND} zurück`;
+export const COMMAND_GO_BACK_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite zurück`;
+export const COMMAND_GO_FORWARD_1 = `${ASSISTANT_WAKEUP_COMMAND} seite vorwärts`;
+export const COMMAND_GO_FORWARD_2 = `${ASSISTANT_WAKEUP_COMMAND} vorwärts`;
+export const COMMAND_GO_FORWARD_3 = `${ASSISTANT_WAKEUP_COMMAND} springe eine seite vor`;
+
+export const COMMAND_DUPLICATE_1 = `${ASSISTANT_WAKEUP_COMMAND} Seite duplizieren`;
+export const COMMAND_DUPLICATE_2 = `${ASSISTANT_WAKEUP_COMMAND} Seite kopieren`;
+
+export const COMMAND_MOVE_TAB_TO_FIRST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Anfang bewegen`;
+export const COMMAND_MOVE_TAB_TO_LAST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Ende bewegen`;
+export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach links bewegen`;
+export const COMMAND_MOVE_TAB_TO_RIGHT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach rechts bewegen`;
+export const COMMAND_MOVE_TAB_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} Tab in ein neues Fenster bewegen`;
+export const COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} alle Tabs zusammenfügen`;
+
+export const COMMAND_OPEN_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab nummer :index`;
+export const COMMAND_OPEN_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab mit der nummer :index`;
+export const COMMAND_OPEN_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} tab mit der nummer :index öffnen`;
+export const COMMAND_OPEN_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte mit der nummer :index`;
+export const COMMAND_OPEN_TAB_5 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte nummer :index`;
+export const COMMAND_OPEN_TAB_6 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte mit der nummer :index öffnen`;
+
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne linke registerkarte`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne linken tab`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} linken tab öffnen`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte links öffnen`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechte registerkarte`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechten tab`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} rechten tab öffnen`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte rechts öffnen`;
+
+export const COMMAND_CLOSE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} tab schließen`;
+export const COMMAND_CLOSE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte schließen`;
+export const COMMAND_CLOSE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} schließe registerkarte`;
+export const COMMAND_CLOSE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} schließe den tab`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle tabs`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle registerkarten`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3 = `${ASSISTANT_WAKEUP_COMMAND} alle registerkarten schließen`;
+export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4 = `${ASSISTANT_WAKEUP_COMMAND} alle tabs schließen`;
+export const COMMAND_CLOSE_ALL_WINDOWS_1 = `${ASSISTANT_WAKEUP_COMMAND} alle fenster schließen`;
+export const COMMAND_CLOSE_ALL_WINDOWS_2 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle fenster`;
+
+
 export enum CommandType {
     INTRODUCTION,
     UTILITY,
     WEATHER,
-    YOUTUBE
+    YOUTUBE,
+    BROWSER_CONTROL
 }
 

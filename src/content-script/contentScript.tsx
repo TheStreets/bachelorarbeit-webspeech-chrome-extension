@@ -322,6 +322,9 @@ function handleGoogleRequests(message: Message, setComponent: Dispatch<SetStateA
     }
 }
 
+/**
+ * helper function, open Gmail on google homepage
+ * */
 function openGmailOnGoogleHomepage() {
     try {
         const gmailAnchorTags = document.getElementsByClassName('gb_d');

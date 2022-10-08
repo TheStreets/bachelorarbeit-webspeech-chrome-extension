@@ -27,7 +27,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
-    COMMAND_RESET,
+    COMMAND_RESET_1,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
     COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_TODAY_WEATHER_BY_CITY,
@@ -46,10 +46,9 @@ export function createTableData(command: string, example: string, commandType: C
     return {command, example, commandTypeAsString, details};
 }
 
-
 const rows = [
     createTableData(COMMAND_HOW_ARE_YOU, 'wie geht es dir', CommandType.INTRODUCTION, '-'),
-    createTableData(COMMAND_RESET, 'reset', CommandType.UTILITY, 'Hilfsfunktion, dass das erkannte zurücksetzt'),
+    createTableData(COMMAND_RESET_1, 'reset', CommandType.UTILITY, 'Hilfsfunktion, dass das erkannte zurücksetzt'),
     createTableData(COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION, 'wie ist das aktuelle Wetter', CommandType.WEATHER, '-'),
     createTableData(COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION, 'wie wird das Wetter heute', CommandType.WEATHER, '-'),
     createTableData(COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION, 'wie wird das Wetter in den nächsten drei tagen', CommandType.WEATHER, '-'),

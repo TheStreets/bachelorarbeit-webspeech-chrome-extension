@@ -2,6 +2,7 @@ import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
 
+
 /**
  *  helper function, open the tab, check if tab is open, then open the opened tab
  * */
@@ -64,6 +65,7 @@ function createContextMenus() {
     });
 }
 
+
 /**
  * message listener for the communication between the open extension and the content script
  * */
@@ -112,9 +114,170 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             message.type === MessageType.COMMAND_OPEN_GOOGLE_FINANCE_RESULT ||
             message.type === MessageType.COMMAND_OPEN_GOOGLE_FLY_RESULT) {
             handleGoogleSearchPage(message);
+        } else if (message.type === MessageType.COMMAND_GO_BACK) {
+            handleBrowserNavigation('back');
+        } else if (message.type === MessageType.COMMAND_GO_FORWARD) {
+            handleBrowserNavigation('forward');
+        } else if (message.type === MessageType.COMMAND_DUPLICATE_PAGE) {
+            handleBrowserNavigation('duplicate');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_FIRST_POSITION) {
+            handleBrowserTabMovement('move_first');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_LAST_POSITION) {
+            handleBrowserTabMovement('move_last');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_LEFT_POSITION) {
+            handleBrowserTabMovement('move_left');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_RIGHT_POSITION) {
+            handleBrowserTabMovement('move_right');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_NEW_WINDOW) {
+            handleBrowserTabMovement('new_window');
+        } else if (message.type === MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW) {
+            handleBrowserTabMovement('all_to_new_window');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB) {
+            openBrowserTab(message, 'index');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB) {
+            openBrowserTab(message, 'left');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB) {
+            openBrowserTab(message, 'right');
+        } else if (message.type === MessageType.COMMAND_CLOSE_TAB) {
+            handleBrowserClosing('active');
+        } else if (message.type === MessageType.COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW) {
+            handleBrowserClosing('current_window');
+        } else if (message.type === MessageType.COMMAND_CLOSE_ALL_WINDOWS) {
+            handleBrowserClosing('all_windows');
         }
     });
 });
+
+/**
+ * helper function, handle back navigation or forward navigation
+ * @param action possible value: 'back', 'forward', 'duplicate', 'move_first', 'move_last'
+ * */
+function handleBrowserNavigation(action: string) {
+    try {
+        getActiveTab().then(activeTab => {
+            if (activeTab) {
+                const url = activeTab.url;
+                console.log('Url: ', url);
+                if (url && url !== getExtensionUrl()) {
+                    if (action === 'back') {
+                        chrome.tabs.goBack().catch(reason => {
+                            speakErrorMessage('Es gibt keine Seite, die ich nach zurück springen kann.');
+                        });
+                    } else if (action === 'forward') {
+                        chrome.tabs.goForward().catch(reason => {
+                            speakErrorMessage('Es gibt keine Seite, die ich nach vorne springen kann.');
+                        });
+                    } else if (action === 'duplicate') {
+                        chrome.tabs.duplicate(activeTab.id as number);
+                    }
+                } else {
+                    speakErrorMessage('Ihre Anfrage konnte nicht bearbeitet werden. Überprüfen Sie, dass Sie sich nicht auf die Seite des Programms befinden.');
+                }
+            } else {
+                speakErrorMessage();
+            }
+        });
+    } catch (e) {
+        speakErrorMessage();
+    }
+}
+
+/**
+ * helper function, handle back navigation or forward navigation
+ * @param action possible value: 'move_first', 'move_last', 'move_left', 'move_right'
+ * */
+function handleBrowserTabMovement(action: string) {
+    getActiveTab().then(activeTab => {
+        if (action === 'move_first') {
+            moveTabToPosition(activeTab.id as number, 0);
+        } else if (action === 'move_last') {
+            moveTabToPosition(activeTab.id as number, -1);
+        } else if (action === 'move_left') {
+            const tabId = activeTab.id as number;
+            chrome.tabs.query({currentWindow: true}, tabs => {
+                for (let i = 0; i < tabs.length; i++) {
+                    const tab = tabs[i];
+                    if (activeTab.url === tab.url) {
+                        console.log('Found the tab');
+                        if (i === 0) {
+                            moveTabToPosition(tabId, -1);
+                            break;
+                        }
+                        moveTabToPosition(tabId, i - 1);
+                        break;
+                    }
+                }
+            });
+        } else if (action === 'move_right') {
+            const tabId = activeTab.id as number;
+            chrome.tabs.query({currentWindow: true}, tabs => {
+                for (let i = 0; i < tabs.length; i++) {
+                    const tab = tabs[i];
+                    if (activeTab.url === tab.url) {
+                        console.log('Found the tab');
+                        if (i === tabs.length - 1) {
+                            moveTabToPosition(tabId, 0);
+                            break;
+                        }
+                        moveTabToPosition(tabId, i + 1);
+                        break;
+                    }
+                }
+            });
+        } else if (action === 'new_window') {
+            try {
+                chrome.windows.getCurrent(oldWindow => {
+                    chrome.windows.create({
+                        top: oldWindow.top,
+                        left: oldWindow.left,
+                        width: oldWindow.width,
+                        height: oldWindow.height,
+                        focused: false
+                    }, window => {
+                        getActiveTab().then(activeTab => {
+                            const id: number = activeTab.id as number;
+                            if (id) {
+                                chrome.tabs.move(id, {index: 0, windowId: window?.id}).then(tab => {
+                                    chrome.windows.update(window?.id as number, {state: oldWindow.state})
+                                        .catch(error => speakErrorMessage());
+                                });
+                            }
+                        }).catch(error => speakErrorMessage());
+                    });
+                });
+            } catch (e) {
+                speakErrorMessage()
+            }
+        } else if (action === 'all_to_new_window') {
+            try {
+                try {
+                    chrome.tabs.query({}, tabs => {
+                        chrome.windows.getCurrent(oldWindow => {
+                            chrome.windows.create({
+                                top: oldWindow.top,
+                                left: oldWindow.left,
+                                width: oldWindow.width,
+                                height: oldWindow.height,
+                                focused: false
+                            }, window => {
+                                const ids: number[] = tabs.map(tab => tab.id ? tab.id : -1);
+                                chrome.tabs.move(ids, {index: 0, windowId: window?.id})
+                                    .then(tabs => {
+                                        chrome.windows.update(window?.id as number, {state: oldWindow.state})
+                                            .catch(error => speakErrorMessage());
+                                    }).catch(error => speakErrorMessage());
+                            });
+                        });
+                    });
+                } catch (e) {
+                    speakErrorMessage();
+                }
+            } catch (e) {
+                speakErrorMessage()
+            }
+        }
+    });
+}
 
 /**
  * helper function, gets the active tab
@@ -158,9 +321,9 @@ function handleYoutubeVideoPage(message: Message) {
 /**
  * speaker error message, if message cant be delivered
  * */
-function speakErrorMessage(error: any) {
+function speakErrorMessage(error: string = 'Es ist ein Fehler aufgetreten. Probieren Sie es zu einem späteren Zeitpunkt noch einmal.') {
     console.log('Error: ', error);
-    chrome.tts.speak('Es ist ein Fehler aufgetreten. Probieren Sie es später nochmal.');
+    chrome.tts.speak(error);
 }
 
 /**
@@ -173,7 +336,85 @@ function handleGoogleSearchPage(message: Message) {
                 speakErrorMessage(error);
             });
         } else {
-            chrome.tts.speak('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
+            speakErrorMessage('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
         }
     });
+}
+
+/**
+ * helper function, moves the tab to the position
+ * */
+function moveTabToPosition(theTabToBeMoved: number, toPosition: number) {
+    chrome.tabs.move(theTabToBeMoved, {index: toPosition}).catch(reason => {
+        speakErrorMessage();
+    });
+}
+
+/**
+ * helper function, openbrowser tab with the given number
+ * @param message
+ * @param action possible values: 'index', 'left', 'right'
+ * */
+function openBrowserTab(message: Message, action: string) {
+    if (action === 'index') {
+        const index: number = message.message;
+        chrome.tabs.query({currentWindow: true}, tabs => {
+            chrome.tabs.update(tabs[index].id as number, {active: true})
+                .catch(e => speakErrorMessage('Es ist ein Fehler aufgetreten. Bitte wähle eine gültige Registerkarte.'));
+        });
+    } else if (action === 'left') {
+        chrome.tabs.query({currentWindow: true}).then(tabs => {
+            tabs.map((tab, index) => {
+                if (tab.active) {
+                    console.log('index: ', index);
+                    if (index === 0) {
+                        chrome.tabs.update(tabs[tabs.length - 1].id as number, {active: true});
+                    } else {
+                        chrome.tabs.update(tabs[index - 1].id as number, {active: true});
+                    }
+                }
+            });
+        }).catch(e => speakErrorMessage());
+    } else if (action === 'right') {
+        chrome.tabs.query({currentWindow: true}).then(tabs => {
+            console.log('Tabs: ', tabs)
+            tabs.map((tab, index) => {
+                if (tab.active) {
+                    if (index === tabs.length - 1) {
+                        chrome.tabs.update(tabs[0].id as number, {active: true});
+                    } else {
+                        chrome.tabs.update(tabs[index + 1].id as number, {active: true});
+                    }
+                }
+            });
+        }).catch(e => {
+            console.log(e);
+            speakErrorMessage()});
+    }
+}
+
+/**
+ * helper function, close the active tab
+ * @param action values: 'active', 'current_window'
+ * */
+function handleBrowserClosing(action: string) {
+    if (action === 'active') {
+        getActiveTab().then(activeTab => {
+            const id: number = activeTab?.id as number;
+            chrome.tabs.remove(id).catch((e) => speakErrorMessage());
+        });
+    } else if (action === 'current_window') {
+        chrome.windows.getCurrent().then(window => {
+            console.log('Remove window: ', window.id as number);
+            chrome.windows.remove(window.id as number, () => {
+            });
+        }).catch(e => speakErrorMessage());
+    } else if (action === 'all_windows') {
+        chrome.windows.getAll().then(windows => {
+            windows.map(window => {
+                chrome.windows.remove(window.id as number, () => {
+                });
+            });
+        });
+    }
 }

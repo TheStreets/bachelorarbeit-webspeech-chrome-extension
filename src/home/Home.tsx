@@ -22,41 +22,89 @@ import {
     COMMAND_ACTIVATE_YOUTUBE_SEARCH,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
     COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4,
+    COMMAND_CLOSE_ALL_WINDOWS_1,
+    COMMAND_CLOSE_ALL_WINDOWS_2,
+    COMMAND_CLOSE_TAB_1,
+    COMMAND_CLOSE_TAB_2,
+    COMMAND_CLOSE_TAB_3,
+    COMMAND_CLOSE_TAB_4,
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_DUPLICATE_1,
+    COMMAND_DUPLICATE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
+    COMMAND_GO_BACK_1,
+    COMMAND_GO_BACK_2,
+    COMMAND_GO_BACK_3,
+    COMMAND_GO_FORWARD_1,
+    COMMAND_GO_FORWARD_2,
+    COMMAND_GO_FORWARD_3,
     COMMAND_HOW_ARE_YOU,
+    COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW,
+    COMMAND_MOVE_TAB_TO_FIRST_POSITION,
+    COMMAND_MOVE_TAB_TO_LAST_POSITION,
+    COMMAND_MOVE_TAB_TO_LEFT_POSITION,
+    COMMAND_MOVE_TAB_TO_NEW_WINDOW,
+    COMMAND_MOVE_TAB_TO_RIGHT_POSITION,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
-    COMMAND_MUTE_YOUTUBE_VIDEO_2, COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
+    COMMAND_MUTE_YOUTUBE_VIDEO_2,
+    COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
     COMMAND_OPEN_GOOGLE,
     COMMAND_OPEN_GOOGLE_ALL_RESULT_1,
-    COMMAND_OPEN_GOOGLE_ALL_RESULT_2, COMMAND_OPEN_GOOGLE_ALL_RESULT_3,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_2,
+    COMMAND_OPEN_GOOGLE_ALL_RESULT_3,
     COMMAND_OPEN_GOOGLE_BOOK_RESULT_1,
-    COMMAND_OPEN_GOOGLE_BOOK_RESULT_2, COMMAND_OPEN_GOOGLE_BOOK_RESULT_3,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_2,
+    COMMAND_OPEN_GOOGLE_BOOK_RESULT_3,
     COMMAND_OPEN_GOOGLE_FINANCE_RESULT_1,
     COMMAND_OPEN_GOOGLE_FINANCE_RESULT_2,
     COMMAND_OPEN_GOOGLE_FINANCE_RESULT_3,
     COMMAND_OPEN_GOOGLE_FLY_RESULT_1,
-    COMMAND_OPEN_GOOGLE_FLY_RESULT_2, COMMAND_OPEN_GOOGLE_FLY_RESULT_3,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_2,
+    COMMAND_OPEN_GOOGLE_FLY_RESULT_3,
     COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1,
-    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2, COMMAND_OPEN_GOOGLE_IMAGE_RESULT_3,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2,
+    COMMAND_OPEN_GOOGLE_IMAGE_RESULT_3,
     COMMAND_OPEN_GOOGLE_MAPS_RESULT_1,
-    COMMAND_OPEN_GOOGLE_MAPS_RESULT_2, COMMAND_OPEN_GOOGLE_MAPS_RESULT_3,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_2,
+    COMMAND_OPEN_GOOGLE_MAPS_RESULT_3,
     COMMAND_OPEN_GOOGLE_NEWS_RESULT_1,
-    COMMAND_OPEN_GOOGLE_NEWS_RESULT_2, COMMAND_OPEN_GOOGLE_NEWS_RESULT_3,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_2,
+    COMMAND_OPEN_GOOGLE_NEWS_RESULT_3,
     COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_1,
-    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2, COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_3,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_2,
+    COMMAND_OPEN_GOOGLE_SHOPPING_RESULT_3,
     COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_1,
-    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2, COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_3,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_2,
+    COMMAND_OPEN_GOOGLE_VIDEOS_RESULT_3,
+    COMMAND_OPEN_TAB_1,
+    COMMAND_OPEN_TAB_2,
+    COMMAND_OPEN_TAB_3,
+    COMMAND_OPEN_TAB_4, COMMAND_OPEN_TAB_5, COMMAND_OPEN_TAB_6,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4,
+    COMMAND_OPEN_WEBSITE_1,
+    COMMAND_OPEN_WEBSITE_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
     COMMAND_OPEN_YOUTUBE_VIDEO_VIA_INDEX,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
-    COMMAND_RESET,
+    COMMAND_RESET_1,
+    COMMAND_RESET_2,
+    COMMAND_RESET_3,
     COMMAND_SEARCH_ON_GOOGLE,
     COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
@@ -467,6 +515,212 @@ function openGmailOnGoogleHomepage(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, opens the website in a new tab
+ * */
+function openWebsite(website) {
+    console.log(website);
+    try {
+        chrome.tabs.create({url: 'https://www.' + website});
+    } catch (e) {
+        speak('Es ist leider ein Fehler aufgetreten. Bitte versuchen Sie es nochmal.')
+    }
+}
+
+/**
+ * helper function, send message to background
+ * */
+function goBack(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_GO_BACK
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function goForward(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_GO_FORWARD
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function duplicatePage(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DUPLICATE_PAGE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToFirstPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_FIRST_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToLastPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_LAST_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToLeftPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_LEFT_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToRightPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_RIGHT_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToNewWindow(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_NEW_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function closeAllTabs(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveAllTabsToNewWindow(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openTabWithNumber(index) {
+    console.log('Open tab with number: ', index);
+    const message: Message = {
+        message: index,
+        type: MessageType.COMMAND_OPEN_TAB
+    }
+    connection.postMessage(message);
+}
+
+/**
+ * helper function, send message to background
+ * */
+function closeTab(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_CLOSE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function closeAllWindows(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_CLOSE_ALL_WINDOWS
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openTabLeftFromActiveTab(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openTabRightFromActiveTab(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -478,7 +732,7 @@ function Home() {
             }
         },
         {
-            command: COMMAND_RESET,
+            command: [COMMAND_RESET_1, COMMAND_RESET_2, COMMAND_RESET_3],
             callback: (command) => command.resetTranscript()
         },
         {
@@ -637,6 +891,72 @@ function Home() {
             command: COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
             callback: openGmailOnGoogleHomepage
         },
+        {
+            command: [COMMAND_OPEN_WEBSITE_1, COMMAND_OPEN_WEBSITE_2],
+            callback: openWebsite
+        },
+        {
+            command: [COMMAND_GO_BACK_1, COMMAND_GO_BACK_2, COMMAND_GO_BACK_3],
+            callback: goBack
+        },
+        {
+            command: [COMMAND_GO_FORWARD_1, COMMAND_GO_FORWARD_2, COMMAND_GO_FORWARD_3],
+            callback: goForward
+        },
+        {
+            command: [COMMAND_DUPLICATE_1, COMMAND_DUPLICATE_2],
+            callback: duplicatePage
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_FIRST_POSITION],
+            callback: moveTabToFirstPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_LAST_POSITION],
+            callback: moveTabToLastPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_LEFT_POSITION],
+            callback: moveTabToLeftPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_RIGHT_POSITION],
+            callback: moveTabToRightPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_NEW_WINDOW],
+            callback: moveTabToNewWindow
+        },
+        {
+            command: [COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW],
+            callback: moveAllTabsToNewWindow
+        },
+        {
+            command: [COMMAND_OPEN_TAB_1, COMMAND_OPEN_TAB_2, COMMAND_OPEN_TAB_3, COMMAND_OPEN_TAB_4, COMMAND_OPEN_TAB_5, COMMAND_OPEN_TAB_6],
+            callback: openTabWithNumber
+        },
+        {
+            command: [COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4],
+            callback: openTabLeftFromActiveTab
+        },
+        {
+            command: [COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4],
+            callback: openTabRightFromActiveTab
+        },
+        {
+            command: [COMMAND_CLOSE_TAB_1, COMMAND_CLOSE_TAB_2, COMMAND_CLOSE_TAB_3, COMMAND_CLOSE_TAB_4],
+            callback: closeTab
+        },
+        {
+            command: [COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1, COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2,
+                COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3, COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4],
+            callback: closeAllTabs
+        },
+        {
+            command: [COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2],
+            callback: closeAllWindows
+        },
+
     ]
 
     const message: Message = {
