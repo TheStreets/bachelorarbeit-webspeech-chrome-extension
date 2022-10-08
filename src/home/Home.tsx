@@ -25,7 +25,9 @@ import {
     COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_1,
     COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_2,
     COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_3,
-    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4, COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2,
+    COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4,
+    COMMAND_CLOSE_ALL_WINDOWS_1,
+    COMMAND_CLOSE_ALL_WINDOWS_2,
     COMMAND_CLOSE_TAB_1,
     COMMAND_CLOSE_TAB_2,
     COMMAND_CLOSE_TAB_3,
@@ -84,7 +86,14 @@ import {
     COMMAND_OPEN_TAB_1,
     COMMAND_OPEN_TAB_2,
     COMMAND_OPEN_TAB_3,
-    COMMAND_OPEN_TAB_4,
+    COMMAND_OPEN_TAB_4, COMMAND_OPEN_TAB_5, COMMAND_OPEN_TAB_6,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3,
+    COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4,
     COMMAND_OPEN_WEBSITE_1,
     COMMAND_OPEN_WEBSITE_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
@@ -686,6 +695,32 @@ function closeAllWindows(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function openTabLeftFromActiveTab(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function openTabRightFromActiveTab(command) {
+    console.log('Closing tab');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -897,8 +932,16 @@ function Home() {
             callback: moveAllTabsToNewWindow
         },
         {
-            command: [COMMAND_OPEN_TAB_1, COMMAND_OPEN_TAB_2, COMMAND_OPEN_TAB_3, COMMAND_OPEN_TAB_4],
+            command: [COMMAND_OPEN_TAB_1, COMMAND_OPEN_TAB_2, COMMAND_OPEN_TAB_3, COMMAND_OPEN_TAB_4, COMMAND_OPEN_TAB_5, COMMAND_OPEN_TAB_6],
             callback: openTabWithNumber
+        },
+        {
+            command: [COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4],
+            callback: openTabLeftFromActiveTab
+        },
+        {
+            command: [COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4],
+            callback: openTabRightFromActiveTab
         },
         {
             command: [COMMAND_CLOSE_TAB_1, COMMAND_CLOSE_TAB_2, COMMAND_CLOSE_TAB_3, COMMAND_CLOSE_TAB_4],
@@ -913,6 +956,7 @@ function Home() {
             command: [COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2],
             callback: closeAllWindows
         },
+
     ]
 
     const message: Message = {

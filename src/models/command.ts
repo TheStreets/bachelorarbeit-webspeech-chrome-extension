@@ -90,10 +90,23 @@ export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Ta
 export const COMMAND_MOVE_TAB_TO_RIGHT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach rechts bewegen`;
 export const COMMAND_MOVE_TAB_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} Tab in ein neues Fenster bewegen`;
 export const COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} alle Tabs zusammenfügen`;
+
 export const COMMAND_OPEN_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab nummer :index`;
 export const COMMAND_OPEN_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne tab mit der nummer :index`;
-export const COMMAND_OPEN_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte mit der nummer :index`;
-export const COMMAND_OPEN_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte nummer :index`;
+export const COMMAND_OPEN_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} tab mit der nummer :index öffnen`;
+export const COMMAND_OPEN_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte mit der nummer :index`;
+export const COMMAND_OPEN_TAB_5 = `${ASSISTANT_WAKEUP_COMMAND} öffne registerkarte nummer :index`;
+export const COMMAND_OPEN_TAB_6 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte mit der nummer :index öffnen`;
+
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne linke registerkarte`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne linken tab`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} linken tab öffnen`;
+export const COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte links öffnen`;
+
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechte registerkarte`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} öffne rechten tab`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} rechten tab öffnen`;
+export const COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte rechts öffnen`;
 export const COMMAND_CLOSE_TAB_1 = `${ASSISTANT_WAKEUP_COMMAND} tab schließen`;
 export const COMMAND_CLOSE_TAB_2 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte schließen`;
 export const COMMAND_CLOSE_TAB_3 = `${ASSISTANT_WAKEUP_COMMAND} schließe registerkarte`;

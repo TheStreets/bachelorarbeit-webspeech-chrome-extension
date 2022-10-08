@@ -133,7 +133,11 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         } else if (message.type === MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW) {
             handleBrowserTabMovement('all_to_new_window');
         } else if (message.type === MessageType.COMMAND_OPEN_TAB) {
-            openBrowserTab(message);
+            openBrowserTab(message, 'index');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB) {
+            openBrowserTab(message, 'left');
+        } else if (message.type === MessageType.COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB) {
+            openBrowserTab(message, 'right');
         } else if (message.type === MessageType.COMMAND_CLOSE_TAB) {
             handleBrowserClosing('active');
         } else if (message.type === MessageType.COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW) {
@@ -348,14 +352,45 @@ function moveTabToPosition(theTabToBeMoved: number, toPosition: number) {
 
 /**
  * helper function, openbrowser tab with the given number
+ * @param message
+ * @param action possible values: 'index', 'left', 'right'
  * */
-function openBrowserTab(message: Message) {
-    console.log(message);
-    const index: number = message.message;
-    chrome.tabs.query({currentWindow: true}, tabs => {
-        chrome.tabs.update(tabs[index].id as number, {active: true})
-            .catch(e => speakErrorMessage('Es ist ein Fehler aufgetreten. Bitte wähle eine gültige Registerkarte.'));
-    });
+function openBrowserTab(message: Message, action: string) {
+    if (action === 'index') {
+        const index: number = message.message;
+        chrome.tabs.query({currentWindow: true}, tabs => {
+            chrome.tabs.update(tabs[index].id as number, {active: true})
+                .catch(e => speakErrorMessage('Es ist ein Fehler aufgetreten. Bitte wähle eine gültige Registerkarte.'));
+        });
+    } else if (action === 'left') {
+        chrome.tabs.query({currentWindow: true}).then(tabs => {
+            tabs.map((tab, index) => {
+                if (tab.active) {
+                    console.log('index: ', index);
+                    if (index === 0) {
+                        chrome.tabs.update(tabs[tabs.length - 1].id as number, {active: true});
+                    } else {
+                        chrome.tabs.update(tabs[index - 1].id as number, {active: true});
+                    }
+                }
+            });
+        }).catch(e => speakErrorMessage());
+    } else if (action === 'right') {
+        chrome.tabs.query({currentWindow: true}).then(tabs => {
+            console.log('Tabs: ', tabs)
+            tabs.map((tab, index) => {
+                if (tab.active) {
+                    if (index === tabs.length - 1) {
+                        chrome.tabs.update(tabs[0].id as number, {active: true});
+                    } else {
+                        chrome.tabs.update(tabs[index + 1].id as number, {active: true});
+                    }
+                }
+            });
+        }).catch(e => {
+            console.log(e);
+            speakErrorMessage()});
+    }
 }
 
 /**
