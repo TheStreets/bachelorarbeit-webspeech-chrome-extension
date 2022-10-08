@@ -89,6 +89,7 @@ export const COMMAND_MOVE_TAB_TO_LAST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Ta
 export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach links bewegen`;
 export const COMMAND_MOVE_TAB_TO_RIGHT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach rechts bewegen`;
 export const COMMAND_MOVE_TAB_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} Tab in ein neues Fenster bewegen`;
+export const COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW = `${ASSISTANT_WAKEUP_COMMAND} alle Tabs zusammenfügen`;
 
 
 export enum CommandType {

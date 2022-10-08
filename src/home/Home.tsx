@@ -35,7 +35,7 @@ import {
     COMMAND_GO_FORWARD_1,
     COMMAND_GO_FORWARD_2,
     COMMAND_GO_FORWARD_3,
-    COMMAND_HOW_ARE_YOU,
+    COMMAND_HOW_ARE_YOU, COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW,
     COMMAND_MOVE_TAB_TO_FIRST_POSITION,
     COMMAND_MOVE_TAB_TO_LAST_POSITION,
     COMMAND_MOVE_TAB_TO_LEFT_POSITION, COMMAND_MOVE_TAB_TO_NEW_WINDOW, COMMAND_MOVE_TAB_TO_RIGHT_POSITION,
@@ -607,6 +607,19 @@ function moveTabToNewWindow(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function moveAllTabsToNewWindow(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -812,6 +825,10 @@ function Home() {
         {
             command: [COMMAND_MOVE_TAB_TO_NEW_WINDOW],
             callback: moveTabToNewWindow
+        },
+        {
+            command: [COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW],
+            callback: moveAllTabsToNewWindow
         },
     ]
 

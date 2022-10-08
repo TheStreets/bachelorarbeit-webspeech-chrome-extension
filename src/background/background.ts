@@ -1,6 +1,7 @@
 import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
+import Tab = chrome.tabs.Tab;
 
 
 /**
@@ -129,6 +130,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserTabMovement('move_right');
         } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_NEW_WINDOW) {
             handleBrowserTabMovement('new_window');
+        } else if (message.type === MessageType.COMMAND_MOVE_ALL_TABS_TO_NEW_WINDOW) {
+            handleBrowserTabMovement('all_to_new_window');
         }
     });
 });
@@ -230,6 +233,33 @@ function handleBrowserTabMovement(action: string) {
                         }).catch(error => speakErrorMessage());
                     });
                 });
+            } catch (e) {
+                speakErrorMessage()
+            }
+        } else if (action === 'all_to_new_window') {
+            try {
+                try {
+                    chrome.tabs.query({}, tabs => {
+                        chrome.windows.getCurrent(oldWindow => {
+                            chrome.windows.create({
+                                top: oldWindow.top,
+                                left: oldWindow.left,
+                                width: oldWindow.width,
+                                height: oldWindow.height,
+                                focused: false
+                            }, window => {
+                                const ids: number[] = tabs.map(tab => tab.id ? tab.id : -1);
+                                chrome.tabs.move(ids, {index: 0, windowId: window?.id})
+                                    .then(tabs => {
+                                        chrome.windows.update(window?.id as number, {state: oldWindow.state})
+                                            .catch(error => speakErrorMessage());
+                                    }).catch(error => speakErrorMessage());
+                            });
+                        });
+                    });
+                } catch (e) {
+                    speakErrorMessage();
+                }
             } catch (e) {
                 speakErrorMessage()
             }
