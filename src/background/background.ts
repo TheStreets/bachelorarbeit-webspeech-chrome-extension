@@ -2,6 +2,7 @@ import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
 
+
 /**
  *  helper function, open the tab, check if tab is open, then open the opened tab
  * */
@@ -122,6 +123,10 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserTabMovement('move_first');
         } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_LAST_POSITION) {
             handleBrowserTabMovement('move_last');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_LEFT_POSITION) {
+            handleBrowserTabMovement('move_left');
+        } else if (message.type === MessageType.COMMAND_MOVE_TAB_TO_RIGHT_POSITION) {
+            handleBrowserTabMovement('move_right');
         }
     });
 });
@@ -162,22 +167,49 @@ function handleBrowserNavigation(action: string) {
 
 /**
  * helper function, handle back navigation or forward navigation
- * @param action possible value: 'move_first', 'move_last'
+ * @param action possible value: 'move_first', 'move_last', 'move_left', 'move_right'
  * */
 function handleBrowserTabMovement(action: string) {
     getActiveTab().then(activeTab => {
         if (action === 'move_first') {
-            chrome.tabs.move(activeTab.id as number, {index: 0}).catch(reason => {
-                speakErrorMessage();
-            });
+            moveTabToPosition(activeTab.id as number, 0);
         } else if (action === 'move_last') {
-            chrome.tabs.move(activeTab.id as number, {index: -1}).catch(reason => {
-                speakErrorMessage();
+            moveTabToPosition(activeTab.id as number, -1);
+        } else if (action === 'move_left') {
+            const tabId = activeTab.id as number;
+            chrome.tabs.query({currentWindow: true}, tabs => {
+                for (let i = 0; i < tabs.length; i++) {
+                    const tab = tabs[i];
+                    if (activeTab.url === tab.url) {
+                        console.log('Found the tab');
+                        if (i === 0) {
+                            moveTabToPosition(tabId, -1);
+                            break;
+                        }
+                        moveTabToPosition(tabId, i - 1);
+                        break;
+                    }
+                }
+            });
+        } else if (action === 'move_right') {
+            const tabId = activeTab.id as number;
+            chrome.tabs.query({currentWindow: true}, tabs => {
+                for (let i = 0; i < tabs.length; i++) {
+                    const tab = tabs[i];
+                    if (activeTab.url === tab.url) {
+                        console.log('Found the tab');
+                        if (i === tabs.length - 1) {
+                            moveTabToPosition(tabId, 0);
+                            break;
+                        }
+                        moveTabToPosition(tabId, i + 1);
+                        break;
+                    }
+                }
             });
         }
     });
 }
-
 
 /**
  * helper function, gets the active tab
@@ -238,5 +270,14 @@ function handleGoogleSearchPage(message: Message) {
         } else {
             speakErrorMessage('Diese Funktion steht nur zur Verfügung, wenn eine Suche bereits gestartet wurde.');
         }
+    });
+}
+
+/**
+ * helper function, moves the tab to the position
+ * */
+function moveTabToPosition(fromPosition: number, toPosition: number) {
+    chrome.tabs.move(fromPosition, {index: toPosition}).catch(reason => {
+        speakErrorMessage();
     });
 }

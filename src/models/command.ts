@@ -86,6 +86,8 @@ export const COMMAND_DUPLICATE_1 = `${ASSISTANT_WAKEUP_COMMAND} Seite dupliziere
 export const COMMAND_DUPLICATE_2 = `${ASSISTANT_WAKEUP_COMMAND} Seite kopieren`;
 export const COMMAND_MOVE_TAB_TO_FIRST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Anfang bewegen`;
 export const COMMAND_MOVE_TAB_TO_LAST_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab zum Ende bewegen`;
+export const COMMAND_MOVE_TAB_TO_LEFT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach links bewegen`;
+export const COMMAND_MOVE_TAB_TO_RIGHT_POSITION = `${ASSISTANT_WAKEUP_COMMAND} Tab nach rechts bewegen`;
 
 
 export enum CommandType {

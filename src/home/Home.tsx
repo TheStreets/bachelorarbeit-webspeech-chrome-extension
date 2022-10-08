@@ -25,13 +25,20 @@ import {
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
-    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2, COMMAND_DUPLICATE_1, COMMAND_DUPLICATE_2,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_DUPLICATE_1,
+    COMMAND_DUPLICATE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_GO_BACK_1,
     COMMAND_GO_BACK_2,
     COMMAND_GO_BACK_3,
-    COMMAND_GO_FORWARD_1, COMMAND_GO_FORWARD_2, COMMAND_GO_FORWARD_3,
-    COMMAND_HOW_ARE_YOU, COMMAND_MOVE_TAB_TO_FIRST_POSITION, COMMAND_MOVE_TAB_TO_LAST_POSITION,
+    COMMAND_GO_FORWARD_1,
+    COMMAND_GO_FORWARD_2,
+    COMMAND_GO_FORWARD_3,
+    COMMAND_HOW_ARE_YOU,
+    COMMAND_MOVE_TAB_TO_FIRST_POSITION,
+    COMMAND_MOVE_TAB_TO_LAST_POSITION,
+    COMMAND_MOVE_TAB_TO_LEFT_POSITION, COMMAND_MOVE_TAB_TO_RIGHT_POSITION,
     COMMAND_MUTE_YOUTUBE_VIDEO_1,
     COMMAND_MUTE_YOUTUBE_VIDEO_2,
     COMMAND_OPEN_GMAIL_ON_GOOGLE_HOMEPAGE,
@@ -71,7 +78,9 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
-    COMMAND_RESET_1, COMMAND_RESET_2, COMMAND_RESET_3,
+    COMMAND_RESET_1,
+    COMMAND_RESET_2,
+    COMMAND_RESET_3,
     COMMAND_SEARCH_ON_GOOGLE,
     COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
@@ -559,6 +568,32 @@ function moveTabToLastPosition(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function moveTabToLeftPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_LEFT_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function moveTabToRightPosition(command) {
+    console.log(command);
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_MOVE_TAB_TO_RIGHT_POSITION
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -752,6 +787,14 @@ function Home() {
         {
             command: [COMMAND_MOVE_TAB_TO_LAST_POSITION],
             callback: moveTabToLastPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_LEFT_POSITION],
+            callback: moveTabToLeftPosition
+        },
+        {
+            command: [COMMAND_MOVE_TAB_TO_RIGHT_POSITION],
+            callback: moveTabToRightPosition
         },
     ]
 
