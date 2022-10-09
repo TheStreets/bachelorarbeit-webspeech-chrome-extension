@@ -104,7 +104,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
     COMMAND_RESET_1,
     COMMAND_RESET_2,
-    COMMAND_RESET_3,
+    COMMAND_RESET_3, COMMAND_SEARCH_1, COMMAND_SEARCH_2,
     COMMAND_SEARCH_ON_GOOGLE,
     COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
@@ -721,6 +721,18 @@ function openTabRightFromActiveTab(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function search(searchRequest) {
+    console.log('Search-Request: ', searchRequest);
+    const message: Message = {
+        message: searchRequest,
+        type: MessageType.COMMAND_SEARCH
+    }
+    connection.postMessage(message);
+}
+
 function Home() {
     const commands = [
         {
@@ -956,7 +968,10 @@ function Home() {
             command: [COMMAND_CLOSE_ALL_WINDOWS_1, COMMAND_CLOSE_ALL_WINDOWS_2],
             callback: closeAllWindows
         },
-
+        {
+            command: [COMMAND_SEARCH_1, COMMAND_SEARCH_2],
+            callback: search
+        },
     ]
 
     const message: Message = {

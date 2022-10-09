@@ -41,8 +41,8 @@ export const COMMAND_ACTIVATE_YOUTUBE_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} Such
 
 // google
 export const COMMAND_OPEN_GOOGLE = `${ASSISTANT_WAKEUP_COMMAND} öffne Google`;
-export const COMMAND_SEARCH_ON_GOOGLE = `${ASSISTANT_WAKEUP_COMMAND} suche nach *`;
-export const COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} neue suche nach *`;
+export const COMMAND_SEARCH_ON_GOOGLE = `${ASSISTANT_WAKEUP_COMMAND} suche auf google nach *`;
+export const COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH = `${ASSISTANT_WAKEUP_COMMAND} neue suche auf google nach *`;
 export const COMMAND_OPEN_GOOGLE_IMAGE_RESULT_1 = `${ASSISTANT_WAKEUP_COMMAND} öffne bilder ergebnisse`;
 export const COMMAND_OPEN_GOOGLE_IMAGE_RESULT_2 = `${ASSISTANT_WAKEUP_COMMAND} zeige bilder ergebnisse`;
 export const COMMAND_OPEN_GOOGLE_IMAGE_RESULT_3 = `${ASSISTANT_WAKEUP_COMMAND} öffne Reiter Bilder`;
@@ -121,6 +121,10 @@ export const COMMAND_CLOSE_ALL_TABS_IN_CURRENT_WINDOW_4 = `${ASSISTANT_WAKEUP_CO
 export const COMMAND_CLOSE_ALL_WINDOWS_1 = `${ASSISTANT_WAKEUP_COMMAND} alle fenster schließen`;
 export const COMMAND_CLOSE_ALL_WINDOWS_2 = `${ASSISTANT_WAKEUP_COMMAND} schließe alle fenster`;
 
+
+// search with the standard search engine
+export const COMMAND_SEARCH_1 = `${ASSISTANT_WAKEUP_COMMAND} suche nach *`;
+export const COMMAND_SEARCH_2 = `${ASSISTANT_WAKEUP_COMMAND} nach * suchen`;
 
 export enum CommandType {
     INTRODUCTION,

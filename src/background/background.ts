@@ -144,6 +144,9 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleBrowserClosing('current_window');
         } else if (message.type === MessageType.COMMAND_CLOSE_ALL_WINDOWS) {
             handleBrowserClosing('all_windows');
+        } else if (message.type === MessageType.COMMAND_SEARCH) {
+            chrome.search.query({text: message.message, disposition: "NEW_TAB"}, () => {
+            });
         }
     });
 });
@@ -389,7 +392,8 @@ function openBrowserTab(message: Message, action: string) {
             });
         }).catch(e => {
             console.log(e);
-            speakErrorMessage()});
+            speakErrorMessage()
+        });
     }
 }
 
