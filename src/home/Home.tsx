@@ -798,19 +798,8 @@ function Home() {
             callback: openYoutubeVideo
         },
         {
-            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
-            callback: playOrPauseVideo
-        },
-        {
-            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
-            callback: playOrPauseVideo
-        },
-        {
-            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
-            callback: playOrPauseVideo
-        },
-        {
-            command: COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
+            command: [COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2, COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
+                COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4],
             callback: playOrPauseVideo
         },
         {
@@ -818,11 +807,7 @@ function Home() {
             callback: startNextYoutubeVideo
         },
         {
-            command: COMMAND_MUTE_YOUTUBE_VIDEO_1,
-            callback: muteYoutubeVideo
-        },
-        {
-            command: COMMAND_MUTE_YOUTUBE_VIDEO_2,
+            command: [COMMAND_MUTE_YOUTUBE_VIDEO_1, COMMAND_MUTE_YOUTUBE_VIDEO_2],
             callback: muteYoutubeVideo
         },
         {
@@ -830,27 +815,15 @@ function Home() {
             callback: unMuteYoutubeVideo
         },
         {
-            command: COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1,
+            command: [COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_1, COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2],
             callback: changeVolume
         },
         {
-            command: COMMAND_CHANGE_VOLUME_ON_YOUTUBE_VIDEO_2,
-            callback: changeVolume
-        },
-        {
-            command: COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1,
+            command: [COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2],
             callback: activateCinemaMode
         },
         {
-            command: COMMAND_ACTIVATE_YOUTUBE_CINEMA_MODE_2,
-            callback: activateCinemaMode
-        },
-        {
-            command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
-            callback: deactivateCinemaMode
-        },
-        {
-            command: COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+            command: [COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1, COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2],
             callback: deactivateCinemaMode
         },
         {
