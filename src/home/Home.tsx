@@ -86,14 +86,17 @@ import {
     COMMAND_OPEN_TAB_1,
     COMMAND_OPEN_TAB_2,
     COMMAND_OPEN_TAB_3,
-    COMMAND_OPEN_TAB_4, COMMAND_OPEN_TAB_5, COMMAND_OPEN_TAB_6,
+    COMMAND_OPEN_TAB_4,
+    COMMAND_OPEN_TAB_5,
+    COMMAND_OPEN_TAB_6,
     COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_1,
     COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_2,
     COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_3,
     COMMAND_OPEN_TAB_LEFT_FROM_ACTIVE_TAB_4,
     COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_1,
     COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_2,
-    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3, COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_3,
+    COMMAND_OPEN_TAB_RIGHT_FROM_ACTIVE_TAB_4,
     COMMAND_OPEN_WEBSITE_1,
     COMMAND_OPEN_WEBSITE_2,
     COMMAND_OPEN_YOUTUBE_PAGE,
@@ -102,9 +105,15 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
+    COMMAND_RELOAD_WEBSITE_1,
+    COMMAND_RELOAD_WEBSITE_2,
+    COMMAND_RELOAD_WEBSITE_3,
+    COMMAND_RELOAD_WEBSITE_4, COMMAND_RELOAD_WEBSITE_5,
     COMMAND_RESET_1,
     COMMAND_RESET_2,
-    COMMAND_RESET_3, COMMAND_SEARCH_1, COMMAND_SEARCH_2,
+    COMMAND_RESET_3,
+    COMMAND_SEARCH_1,
+    COMMAND_SEARCH_2,
     COMMAND_SEARCH_ON_GOOGLE,
     COMMAND_SEARCH_ON_GOOGLE_AFTER_SEARCH,
     COMMAND_START_NEXT_YOUTUBE_VIDEO,
@@ -733,6 +742,19 @@ function search(searchRequest) {
     connection.postMessage(message);
 }
 
+/**
+ * helper function, send message to background
+ * */
+function reloadWebsite(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_RELOAD_WEBSITE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 function Home() {
     const commands = [
         {
@@ -971,6 +993,11 @@ function Home() {
         {
             command: [COMMAND_SEARCH_1, COMMAND_SEARCH_2],
             callback: search
+        },
+        {
+            command: [COMMAND_RELOAD_WEBSITE_1, COMMAND_RELOAD_WEBSITE_2, COMMAND_RELOAD_WEBSITE_3,
+                COMMAND_RELOAD_WEBSITE_4, COMMAND_RELOAD_WEBSITE_5],
+            callback: reloadWebsite
         },
     ]
 

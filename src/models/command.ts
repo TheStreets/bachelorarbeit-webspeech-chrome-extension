@@ -126,6 +126,15 @@ export const COMMAND_CLOSE_ALL_WINDOWS_2 = `${ASSISTANT_WAKEUP_COMMAND} schließ
 export const COMMAND_SEARCH_1 = `${ASSISTANT_WAKEUP_COMMAND} suche nach *`;
 export const COMMAND_SEARCH_2 = `${ASSISTANT_WAKEUP_COMMAND} nach * suchen`;
 
+
+// reload a website
+export const COMMAND_RELOAD_WEBSITE_1 = `${ASSISTANT_WAKEUP_COMMAND} seite neu laden`;
+export const COMMAND_RELOAD_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} tab neu laden`;
+export const COMMAND_RELOAD_WEBSITE_3 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte neu laden`;
+export const COMMAND_RELOAD_WEBSITE_4 = `${ASSISTANT_WAKEUP_COMMAND} Website neu laden`;
+export const COMMAND_RELOAD_WEBSITE_5 = `${ASSISTANT_WAKEUP_COMMAND} Webseite neu laden`;
+
+
 export enum CommandType {
     INTRODUCTION,
     UTILITY,

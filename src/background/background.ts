@@ -147,6 +147,16 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
         } else if (message.type === MessageType.COMMAND_SEARCH) {
             chrome.search.query({text: message.message, disposition: "NEW_TAB"}, () => {
             });
+        } else if (message.type === MessageType.COMMAND_RELOAD_WEBSITE) {
+            getActiveTab().then(activeTab => {
+                const url = activeTab.url;
+                if (url !== getExtensionUrl()) {
+                    chrome.tabs.reload(activeTab.id as number)
+                        .catch(e => speakErrorMessage());
+                } else {
+                    speakErrorMessage('Diese Funktion ist auf dieser Website nicht erlaubt.')
+                }
+            }).catch(e => speakErrorMessage());
         }
     });
 });
