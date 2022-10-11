@@ -121,6 +121,7 @@ import {
     COMMAND_TODAY_WEATHER_BY_CITY,
     COMMAND_UNMUTE_YOUTUBE_VIDEO
 } from "../models/command";
+import NotesComponent from "../components/NotesComponent";
 
 let connection: any = undefined;
 
@@ -978,6 +979,7 @@ function Home() {
         message: '',
         type: MessageType.SETUP_COMMUNICATION
     };
+
     const port = chrome.runtime.connect({name: EXTENSION_ID});
     connection = port;
     port.postMessage(message);
@@ -1007,7 +1009,7 @@ function Home() {
                 <>
                     {listening &&
                         <Typography variant="h5" component="h2" style={{textAlign: 'center', color: 'white'}}>
-                            Die Aufnahme ist gestartet. Sie können nun die Kommandos benutzen.
+                            Die Aufnahme ist gestartet. Sie können nun die Befehle benutzen.
                         </Typography>
                     }
                     {!listening &&
@@ -1051,7 +1053,14 @@ function Home() {
             </Box>
             <Divider/>
             <Box paddingY={"1rem"}>
-                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Kommandos</Typography>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Ihre Notizen</Typography>
+                <Box paddingTop={"1rem"}>
+                    <NotesComponent/>
+                </Box>
+            </Box>
+            <Divider/>
+            <Box paddingY={"1rem"}>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Befehle</Typography>
                 <Box paddingTop={"1rem"}>
                     <CommandTable/>
                 </Box>
