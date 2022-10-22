@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from "react";
+import React, {FC, useEffect, useMemo, useState} from "react";
 import {Button, Card, CardContent, List, ListItem, ListItemText, Stack, TextField} from "@mui/material";
 import {Note} from "../models/notes";
 import Box from "@mui/material/Box";
+import NotesTable from "./notes-table";
 
 const NotesComponent: React.FC<{}> = () => {
     let NOTES: Note[] = []
 
     const [note, setNote] = useState('');
     const [notes, setNotes] = useState(NOTES);
+    const [selections, setSelections] = useState([]);
 
     /**
      * initialize notes, check if notes existst in storage
@@ -23,11 +25,16 @@ const NotesComponent: React.FC<{}> = () => {
         setNote('');
     }
 
-    const removeNote = (id: number) => {
-        const index = notes.findIndex(note => id === note.id);
-        if (index !== -1) {
+    const removeNotes = (event) => {
+        selections.map(i => {
+            console.log('I: ', i);
+            const index = i - 1;
+            console.log('Index: ', index);
             NOTES = notes.splice(index, 1);
-        }
+            console.log(NOTES);
+            return i - 1;
+        });
+        chrome.storage.sync.set({'notes': NOTES}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
     }
 
     const handleInputChange = (event) => {
@@ -59,13 +66,14 @@ const NotesComponent: React.FC<{}> = () => {
             <CardContent>
                 <Stack direction={"column"} paddingY={"1rem"}>
                     <Stack direction={"row"} width={"100%"} display={"flex"} justifyContent={"center"}
-                           alignItems={"center"}>
+                           alignItems={"center"} paddingBottom={'1.5rem'}>
                         <Box display={"flex"} justifyContent={"center"} alignItems={"center"}>
                             <Box paddingRight={"2rem"}>
                                 <TextField
                                     id="standard-text"
                                     type="text"
                                     value={note}
+                                    placeholder={'Notiz'}
                                     InputLabelProps={{
                                         shrink: true,
                                     }}
@@ -76,22 +84,10 @@ const NotesComponent: React.FC<{}> = () => {
                                 />
                             </Box>
                             <Button variant="contained" disabled={!(note.length)} onClick={safeNote}>Speichern</Button>
+                            <Button variant="outlined" disabled={!(selections.length)} onClick={removeNotes}>Löschen</Button>
                         </Box>
                     </Stack>
-
-                    {/*<List>*/}
-                    {/*    {*/}
-                    {/*        notes.map(note => {*/}
-                    {/*            return (*/}
-                    {/*                <ListItem>*/}
-                    {/*                    <ListItemText*/}
-                    {/*                        primary={note.text}*/}
-                    {/*                    />*/}
-                    {/*                </ListItem>*/}
-                    {/*            );*/}
-                    {/*        })*/}
-                    {/*    }*/}
-                    {/*</List>*/}
+                    <NotesTable notes={notes} onSelection={(selected) => setSelections(selected)}/>
                 </Stack>
             </CardContent>
         </Card>
