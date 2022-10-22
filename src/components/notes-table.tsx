@@ -16,7 +16,7 @@ const columns: GridColDef[] = [
     },
 ];
 
-const NotesTable: FC<{ notes: Note[] }> = ({notes}) => {
+const NotesTable: FC<{ notes: Note[], onSelection}> = ({notes, onSelection}) => {
     return (
         <div style={{height: 400, width: '100%'}}>
             <DataGrid
@@ -28,7 +28,7 @@ const NotesTable: FC<{ notes: Note[] }> = ({notes}) => {
                 editMode={"row"}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
-                onSelectionModelChange={(selectionModel, details) => console.log('Model: ', selectionModel, ' details: ', details)}
+                onSelectionModelChange={onSelection}
             />
         </div>
     );
