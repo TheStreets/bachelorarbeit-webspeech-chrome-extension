@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "A Chrome Extension that uses the WebSpeech API, to make certain tasks easier.",
   "action": {
-    "default_title": "Bachelor Thesis: WebSpeech API"
+    "default_title": "Nami"
   },
   "background": {
     "service_worker": "background.js"
