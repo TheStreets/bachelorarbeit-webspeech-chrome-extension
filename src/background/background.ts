@@ -162,6 +162,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
             handleNotesRequest('delete_last');
         } else if (message.type === MessageType.COMMAND_DELETE_ALL_NOTES) {
             handleNotesRequest('delete_all');
+        }else if (message.type === MessageType.COMMAND_READ_LAST_THREE_NOTES) {
+            handleNotesRequest('read_last_3_notes');
         }
     });
 });
@@ -345,6 +347,14 @@ function speakErrorMessage(error: string = 'Es ist ein Fehler aufgetreten. Probi
 }
 
 /**
+ * speaker error message, if message cant be delivered
+ * */
+function speakMessage(message: string) {
+    chrome.tts.speak(message);
+}
+
+
+/**
  * helper function that forwards the message to the google search page
  * */
 function handleGoogleSearchPage(message: Message) {
@@ -464,6 +474,24 @@ function handleNotesRequest(action: string) {
             } else {
                 chrome.storage.sync.set({'notes': []}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
             }
+        });
+    } else if (action === 'read_last_3_notes') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length <= 0) {
+                speakErrorMessage('Es gibt keine Notizen zum Vorlesen.');
+            } else if(notes.length === 1) {
+                const text = `Du hast nur eine Notiz und sie lautet: ${notes[0].text}`;
+                speakMessage(text);
+            } else if(notes.length === 2) {
+                const text = `Deine erste Notiz lautet: ${notes[0].text}. Deine zweite Notiz lautet: ${notes[1].text}. Es gibt keine dritte Notiz zum Vorlesen.`;
+                speakMessage(text);
+            } else {
+                const text = `Deine erste Notiz lautet: ${notes[0].text}. Deine zweite Notiz lautet: ${notes[1].text}. Deine dritte Notiz lautet: ${notes[2].text}`;
+                speakMessage(text);
+            }
+
         });
     }
 }

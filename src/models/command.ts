@@ -139,6 +139,7 @@ export const COMMAND_RELOAD_WEBSITE_5 = `${ASSISTANT_WAKEUP_COMMAND} Webseite ne
 // notes
 export const COMMAND_DELETE_LAST_NOTE = `${ASSISTANT_WAKEUP_COMMAND} letzte Notiz löschen`;
 export const COMMAND_DELETE_ALL_NOTES = `${ASSISTANT_WAKEUP_COMMAND} lösche alle Notizen`;
+export const COMMAND_READ_LAST_THREE_NOTES = `${ASSISTANT_WAKEUP_COMMAND} lies meine letzten drei Notizen vor`;
 
 
 export enum CommandType {

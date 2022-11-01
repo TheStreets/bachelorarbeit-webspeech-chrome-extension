@@ -104,7 +104,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
-    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_READ_LAST_THREE_NOTES,
     COMMAND_RELOAD_WEBSITE_1,
     COMMAND_RELOAD_WEBSITE_2,
     COMMAND_RELOAD_WEBSITE_3,
@@ -782,6 +782,19 @@ function deleteAllNotes(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function readLastThreeNotes(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_READ_LAST_THREE_NOTES
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 
 
 function Home() {
@@ -1008,6 +1021,10 @@ function Home() {
         {
             command: [COMMAND_DELETE_ALL_NOTES],
             callback: deleteAllNotes
+        },
+        {
+            command: [COMMAND_READ_LAST_THREE_NOTES],
+            callback: readLastThreeNotes
         },
     ]
 

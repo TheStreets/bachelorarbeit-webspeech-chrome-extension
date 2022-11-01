@@ -47,6 +47,7 @@ export enum MessageType {
     COMMAND_DELETE_LAST_NOTE,
     COMMAND_DELETE_ALL_NOTES,
     COMMAND_CALL,
+COMMAND_READ_LAST_THREE_NOTES,
 }
 
 export interface Message {
