@@ -1,6 +1,7 @@
 import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
+import {Note} from "../models/notes";
 
 
 /**
@@ -157,6 +158,8 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     speakErrorMessage('Diese Funktion ist auf dieser Website nicht erlaubt.')
                 }
             }).catch(e => speakErrorMessage());
+        } else if (message.type === MessageType.COMMAND_DELETE_LAST_NOTE) {
+            handleNotesRequest('delete');
         }
     });
 });
@@ -429,6 +432,26 @@ function handleBrowserClosing(action: string) {
                 chrome.windows.remove(window.id as number, () => {
                 });
             });
+        });
+    }
+}
+
+
+/**
+ * helper function, handles all notes requests
+ * @param action values: 'delete', 'read_last_3_notes'
+ * */
+function handleNotesRequest(action: string) {
+    if (action === 'delete') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length === 0) {
+                speakErrorMessage('Es gibt keine Notiz zum Löschen.');
+            } else {
+                notes.shift();
+                chrome.storage.sync.set({'notes': notes}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
+            }
         });
     }
 }

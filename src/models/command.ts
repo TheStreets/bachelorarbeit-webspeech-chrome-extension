@@ -5,10 +5,12 @@ export const ASSISTANT_WAKEUP_COMMAND = `Hallo ${ASSISTANT_NAME}`;
 // commands
 //introduction
 export const COMMAND_HOW_ARE_YOU = `${ASSISTANT_WAKEUP_COMMAND} wie geht es dir`;
+
 // Utility
 export const COMMAND_RESET_1 = `reset`;
 export const COMMAND_RESET_2 = `clear`;
 export const COMMAND_RESET_3 = `alles löschen`;
+
 // Weather
 export const COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie ist das aktuelle Wetter`;
 export const COMMAND_TODAY_WEATHER_BY_BROWSER_LOCATION = `${ASSISTANT_WAKEUP_COMMAND} wie wird das Wetter heute`;
@@ -133,6 +135,9 @@ export const COMMAND_RELOAD_WEBSITE_2 = `${ASSISTANT_WAKEUP_COMMAND} tab neu lad
 export const COMMAND_RELOAD_WEBSITE_3 = `${ASSISTANT_WAKEUP_COMMAND} registerkarte neu laden`;
 export const COMMAND_RELOAD_WEBSITE_4 = `${ASSISTANT_WAKEUP_COMMAND} Website neu laden`;
 export const COMMAND_RELOAD_WEBSITE_5 = `${ASSISTANT_WAKEUP_COMMAND} Webseite neu laden`;
+
+// notes
+export const COMMAND_DELETE_LAST_NOTE = `${ASSISTANT_WAKEUP_COMMAND} letzte Notiz löschen`;
 
 
 export enum CommandType {
