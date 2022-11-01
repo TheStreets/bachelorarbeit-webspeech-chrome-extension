@@ -13,7 +13,7 @@ import {
 } from "../utils/utils";
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import Box from "@mui/material/Box";
-import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
+import {Button, Card, CardContent, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
@@ -35,7 +35,7 @@ import {
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
-    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2, COMMAND_DELETE_ALL_NOTES, COMMAND_DELETE_LAST_NOTE,
     COMMAND_DUPLICATE_1,
     COMMAND_DUPLICATE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
@@ -104,7 +104,7 @@ import {
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_1,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_2,
     COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_3,
-    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4,
+    COMMAND_PAUSE_PLAY_YOUTUBE_VIDEO_4, COMMAND_READ_LAST_THREE_NOTES,
     COMMAND_RELOAD_WEBSITE_1,
     COMMAND_RELOAD_WEBSITE_2,
     COMMAND_RELOAD_WEBSITE_3,
@@ -121,6 +121,7 @@ import {
     COMMAND_TODAY_WEATHER_BY_CITY,
     COMMAND_UNMUTE_YOUTUBE_VIDEO
 } from "../models/command";
+import NotesComponent from "../components/NotesComponent";
 
 let connection: any = undefined;
 
@@ -755,6 +756,47 @@ function reloadWebsite(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function deleteLastNote(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DELETE_LAST_NOTE
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function deleteAllNotes(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DELETE_ALL_NOTES
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+/**
+ * helper function, send message to background
+ * */
+function readLastThreeNotes(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_READ_LAST_THREE_NOTES
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
+
+
 function Home() {
     const commands = [
         {
@@ -972,12 +1014,25 @@ function Home() {
                 COMMAND_RELOAD_WEBSITE_4, COMMAND_RELOAD_WEBSITE_5],
             callback: reloadWebsite
         },
+        {
+            command: [COMMAND_DELETE_LAST_NOTE],
+            callback: deleteLastNote
+        },
+        {
+            command: [COMMAND_DELETE_ALL_NOTES],
+            callback: deleteAllNotes
+        },
+        {
+            command: [COMMAND_READ_LAST_THREE_NOTES],
+            callback: readLastThreeNotes
+        },
     ]
 
     const message: Message = {
         message: '',
         type: MessageType.SETUP_COMMUNICATION
     };
+
     const port = chrome.runtime.connect({name: EXTENSION_ID});
     connection = port;
     port.postMessage(message);
@@ -1004,10 +1059,13 @@ function Home() {
     return (
         <Box paddingX={"2rem"}>
             <Box paddingY={"1rem"}>
+                <Card variant={"elevation"}>
+                    <CardContent>
+
                 <>
                     {listening &&
                         <Typography variant="h5" component="h2" style={{textAlign: 'center', color: 'white'}}>
-                            Die Aufnahme ist gestartet. Sie können nun die Kommandos benutzen.
+                            Die Aufnahme ist gestartet. Sie können nun die Befehle benutzen.
                         </Typography>
                     }
                     {!listening &&
@@ -1033,25 +1091,38 @@ function Home() {
                         }
                     }/>
                 </Box>
+                    </CardContent>
+                </Card>
             </Box>
             <Divider/>
             <Box paddingY={"1rem"}>
                 <Typography style={{color: 'white', textTransform: 'uppercase'}}>Ihr Gesprochenes</Typography>
                 <Box paddingTop={"1rem"}>
-                    <TextField
-                        id="outlined-multiline-static"
-                        multiline
-                        rows={10}
-                        maxRows={10}
-                        value={transcript}
-                        variant="filled"
-                        className={"bachelor-arbeit-chrome-extension-textarea"}
-                    />
+                    <Card variant={"elevation"}>
+                        <CardContent>
+                            <TextField
+                                id="outlined-multiline-static"
+                                multiline
+                                rows={10}
+                                maxRows={10}
+                                value={transcript}
+                                variant="filled"
+                                className={"bachelor-arbeit-chrome-extension-textarea"}
+                            />
+                        </CardContent>
+                    </Card>
                 </Box>
             </Box>
             <Divider/>
             <Box paddingY={"1rem"}>
-                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Kommandos</Typography>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Ihre Notizen</Typography>
+                <Box paddingTop={"1rem"}>
+                    <NotesComponent/>
+                </Box>
+            </Box>
+            <Divider/>
+            <Box paddingY={"1rem"}>
+                <Typography style={{color: 'white', textTransform: 'uppercase'}}>Befehle</Typography>
                 <Box paddingTop={"1rem"}>
                     <CommandTable/>
                 </Box>

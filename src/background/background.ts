@@ -1,6 +1,7 @@
 import {EXTENSION_ID, getExtensionUrl} from "../utils/utils";
 import {Message, MessageType} from "../models/Message";
 import Port = chrome.runtime.Port;
+import {Note} from "../models/notes";
 
 
 /**
@@ -157,6 +158,12 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                     speakErrorMessage('Diese Funktion ist auf dieser Website nicht erlaubt.')
                 }
             }).catch(e => speakErrorMessage());
+        } else if (message.type === MessageType.COMMAND_DELETE_LAST_NOTE) {
+            handleNotesRequest('delete_last');
+        } else if (message.type === MessageType.COMMAND_DELETE_ALL_NOTES) {
+            handleNotesRequest('delete_all');
+        }else if (message.type === MessageType.COMMAND_READ_LAST_THREE_NOTES) {
+            handleNotesRequest('read_last_3_notes');
         }
     });
 });
@@ -340,6 +347,14 @@ function speakErrorMessage(error: string = 'Es ist ein Fehler aufgetreten. Probi
 }
 
 /**
+ * speaker error message, if message cant be delivered
+ * */
+function speakMessage(message: string) {
+    chrome.tts.speak(message);
+}
+
+
+/**
  * helper function that forwards the message to the google search page
  * */
 function handleGoogleSearchPage(message: Message) {
@@ -429,6 +444,54 @@ function handleBrowserClosing(action: string) {
                 chrome.windows.remove(window.id as number, () => {
                 });
             });
+        });
+    }
+}
+
+
+/**
+ * helper function, handles all notes requests
+ * @param action values: 'delete_last', 'delete_all', 'read_last_3_notes'
+ * */
+function handleNotesRequest(action: string) {
+    if (action === 'delete_last') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length === 0) {
+                speakErrorMessage('Es gibt keine Notiz zum Löschen.');
+            } else {
+                notes.pop();
+                chrome.storage.sync.set({'notes': notes}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
+            }
+        });
+    } else if (action === 'delete_all') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length === 0) {
+                speakErrorMessage('Es gibt keine Notizen zum Löschen.');
+            } else {
+                chrome.storage.sync.set({'notes': []}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
+            }
+        });
+    } else if (action === 'read_last_3_notes') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length <= 0) {
+                speakErrorMessage('Es gibt keine Notizen zum Vorlesen.');
+            } else if(notes.length === 1) {
+                const text = `Du hast nur eine Notiz und sie lautet: ${notes[0].text}`;
+                speakMessage(text);
+            } else if(notes.length === 2) {
+                const text = `Deine erste Notiz lautet: ${notes[0].text}. Deine zweite Notiz lautet: ${notes[1].text}. Es gibt keine dritte Notiz zum Vorlesen.`;
+                speakMessage(text);
+            } else {
+                const text = `Deine erste Notiz lautet: ${notes[0].text}. Deine zweite Notiz lautet: ${notes[1].text}. Deine dritte Notiz lautet: ${notes[2].text}`;
+                speakMessage(text);
+            }
+
         });
     }
 }
