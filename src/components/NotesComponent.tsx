@@ -1,5 +1,5 @@
-import React, {FC, useEffect, useMemo, useState} from "react";
-import {Button, Card, CardContent, List, ListItem, ListItemText, Stack, TextField} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Button, Card, CardContent, Stack, TextField} from "@mui/material";
 import {Note} from "../models/notes";
 import Box from "@mui/material/Box";
 import NotesTable from "./notes-table";
@@ -42,9 +42,13 @@ const NotesComponent: React.FC<{}> = () => {
         setNote(event.target.value);
     }
 
-    const safeNote = (event) => {
+    const saveNote = () => {
         addNote(new Note(note, (notes.length + 1)));
         chrome.storage.sync.set({'notes': notes}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
+    }
+
+    const handleSaveButtonClick = (event) => {
+        saveNote();
     }
 
     useEffect(() => {
@@ -81,10 +85,17 @@ const NotesComponent: React.FC<{}> = () => {
                                     onChange={handleInputChange}
                                     sx={{minWidth: "600px"}}
                                     size={"medium"}
+                                    onKeyUp={
+                                        (e) => {
+                                            if (e.key === 'Enter') {
+                                                saveNote();
+                                            }
+                                        }
+                                    }
                                 />
                             </Box>
-                            <Button variant="contained" disabled={!(note.length)} onClick={safeNote}>Speichern</Button>
-                            <Button variant="outlined" disabled={!(selections.length)} onClick={removeNotes}>Löschen</Button>
+                            <Button variant="contained" disabled={!(note.length)}
+                                    onClick={handleSaveButtonClick}>Speichern</Button>
                         </Box>
                     </Stack>
                     <NotesTable notes={notes} onSelection={(selected) => setSelections(selected)}/>
