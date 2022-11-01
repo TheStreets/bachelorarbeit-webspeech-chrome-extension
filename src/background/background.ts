@@ -461,7 +461,7 @@ function handleNotesRequest(action: string) {
             if (notes.length === 0) {
                 speakErrorMessage('Es gibt keine Notiz zum Löschen.');
             } else {
-                notes.shift();
+                notes.pop();
                 chrome.storage.sync.set({'notes': notes}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
             }
         });
