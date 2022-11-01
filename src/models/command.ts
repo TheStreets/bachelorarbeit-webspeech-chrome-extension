@@ -147,6 +147,8 @@ export enum CommandType {
     UTILITY,
     WEATHER,
     YOUTUBE,
-    BROWSER_CONTROL
+    GOOGLE,
+    BROWSER_CONTROL,
+    NOTE
 }
 
