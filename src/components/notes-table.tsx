@@ -5,9 +5,15 @@ import {FC} from "react";
 
 const columns: GridColDef[] = [
     {
+        field: 'time',
+        headerName: 'Uhrzeit',
+        flex: 0.1,
+        valueGetter: (params) => params.row.time + ' Uhr'
+    },
+    {
         field: 'date',
         headerName: 'Datum',
-        flex: 0.3
+        flex: 0.2
     },
     {
         field: 'text',
@@ -16,7 +22,7 @@ const columns: GridColDef[] = [
     },
 ];
 
-const NotesTable: FC<{ notes: Note[], onSelection}> = ({notes, onSelection}) => {
+const NotesTable: FC<{ notes: Note[]}> = ({notes}) => {
     return (
         <div style={{height: 400, width: '100%'}}>
             <DataGrid

@@ -25,17 +25,6 @@ const NotesComponent: React.FC<{}> = () => {
         setNote('');
     }
 
-    const removeNotes = (event) => {
-        selections.map(i => {
-            console.log('I: ', i);
-            const index = i - 1;
-            console.log('Index: ', index);
-            NOTES = notes.splice(index, 1);
-            console.log(NOTES);
-            return i - 1;
-        });
-        chrome.storage.sync.set({'notes': NOTES}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
-    }
 
     const handleInputChange = (event) => {
         console.log('Note: ', event.target.value);
@@ -98,7 +87,7 @@ const NotesComponent: React.FC<{}> = () => {
                                     onClick={handleSaveButtonClick}>Speichern</Button>
                         </Box>
                     </Stack>
-                    <NotesTable notes={notes} onSelection={(selected) => setSelections(selected)}/>
+                    <NotesTable notes={notes}/>
                 </Stack>
             </CardContent>
         </Card>
