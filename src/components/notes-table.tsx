@@ -7,12 +7,12 @@ const columns: GridColDef[] = [
     {
         field: 'date',
         headerName: 'Datum',
-        width: 150
+        flex: 0.3
     },
     {
         field: 'text',
         headerName: 'Notiz',
-        width: 500
+        flex: 0.7
     },
 ];
 
@@ -24,11 +24,9 @@ const NotesTable: FC<{ notes: Note[], onSelection}> = ({notes, onSelection}) => 
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                checkboxSelection
                 editMode={"row"}
                 disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
-                onSelectionModelChange={onSelection}
             />
         </div>
     );
