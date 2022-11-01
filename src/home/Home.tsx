@@ -35,7 +35,7 @@ import {
     COMMAND_CURRENT_WEATHER_BY_BROWSER_LOCATION,
     COMMAND_CURRENT_WEATHER_BY_CITY,
     COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_1,
-    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2, COMMAND_DELETE_LAST_NOTE,
+    COMMAND_DEACTIVATE_YOUTUBE_CINEMA_MODE_2, COMMAND_DELETE_ALL_NOTES, COMMAND_DELETE_LAST_NOTE,
     COMMAND_DUPLICATE_1,
     COMMAND_DUPLICATE_2,
     COMMAND_FORCAST_WEATHER_BY_BROWSER_LOCATION,
@@ -769,6 +769,19 @@ function deleteLastNote(command) {
     command.resetTranscript();
 }
 
+/**
+ * helper function, send message to background
+ * */
+function deleteAllNotes(command) {
+    console.log('Reload website');
+    const message: Message = {
+        message: '',
+        type: MessageType.COMMAND_DELETE_ALL_NOTES
+    }
+    connection.postMessage(message);
+    command.resetTranscript();
+}
+
 
 
 function Home() {
@@ -991,6 +1004,10 @@ function Home() {
         {
             command: [COMMAND_DELETE_LAST_NOTE],
             callback: deleteLastNote
+        },
+        {
+            command: [COMMAND_DELETE_ALL_NOTES],
+            callback: deleteAllNotes
         },
     ]
 

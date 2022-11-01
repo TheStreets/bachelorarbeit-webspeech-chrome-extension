@@ -159,7 +159,9 @@ chrome.runtime.onConnect.addListener(function (port: Port) {
                 }
             }).catch(e => speakErrorMessage());
         } else if (message.type === MessageType.COMMAND_DELETE_LAST_NOTE) {
-            handleNotesRequest('delete');
+            handleNotesRequest('delete_last');
+        } else if (message.type === MessageType.COMMAND_DELETE_ALL_NOTES) {
+            handleNotesRequest('delete_all');
         }
     });
 });
@@ -439,10 +441,10 @@ function handleBrowserClosing(action: string) {
 
 /**
  * helper function, handles all notes requests
- * @param action values: 'delete', 'read_last_3_notes'
+ * @param action values: 'delete_last', 'delete_all', 'read_last_3_notes'
  * */
 function handleNotesRequest(action: string) {
-    if (action === 'delete') {
+    if (action === 'delete_last') {
         chrome.storage.sync.get(['notes'], (result) => {
             const initNotes: Note[] = [];
             const notes = result.notes ? result.notes : initNotes;
@@ -451,6 +453,16 @@ function handleNotesRequest(action: string) {
             } else {
                 notes.shift();
                 chrome.storage.sync.set({'notes': notes}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
+            }
+        });
+    } else if (action === 'delete_all') {
+        chrome.storage.sync.get(['notes'], (result) => {
+            const initNotes: Note[] = [];
+            const notes = result.notes ? result.notes : initNotes;
+            if (notes.length === 0) {
+                speakErrorMessage('Es gibt keine Notizen zum Löschen.');
+            } else {
+                chrome.storage.sync.set({'notes': []}).catch(e => chrome.tts.speak('Es ist ein Fehler aufgetreten.'));
             }
         });
     }
