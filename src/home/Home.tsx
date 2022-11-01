@@ -13,7 +13,7 @@ import {
 } from "../utils/utils";
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import Box from "@mui/material/Box";
-import {Button, Divider, SvgIcon, TextField, Typography} from "@mui/material";
+import {Button, Card, CardContent, Divider, SvgIcon, TextField, Typography} from "@mui/material";
 import KeyboardVoiceIcon from '@mui/icons-material/KeyboardVoice';
 import {CommandTable} from "../components/CommandTableComponent";
 import {
@@ -1025,6 +1025,9 @@ function Home() {
     return (
         <Box paddingX={"2rem"}>
             <Box paddingY={"1rem"}>
+                <Card variant={"elevation"}>
+                    <CardContent>
+
                 <>
                     {listening &&
                         <Typography variant="h5" component="h2" style={{textAlign: 'center', color: 'white'}}>
@@ -1054,20 +1057,26 @@ function Home() {
                         }
                     }/>
                 </Box>
+                    </CardContent>
+                </Card>
             </Box>
             <Divider/>
             <Box paddingY={"1rem"}>
                 <Typography style={{color: 'white', textTransform: 'uppercase'}}>Ihr Gesprochenes</Typography>
                 <Box paddingTop={"1rem"}>
-                    <TextField
-                        id="outlined-multiline-static"
-                        multiline
-                        rows={10}
-                        maxRows={10}
-                        value={transcript}
-                        variant="filled"
-                        className={"bachelor-arbeit-chrome-extension-textarea"}
-                    />
+                    <Card variant={"elevation"}>
+                        <CardContent>
+                            <TextField
+                                id="outlined-multiline-static"
+                                multiline
+                                rows={10}
+                                maxRows={10}
+                                value={transcript}
+                                variant="filled"
+                                className={"bachelor-arbeit-chrome-extension-textarea"}
+                            />
+                        </CardContent>
+                    </Card>
                 </Box>
             </Box>
             <Divider/>
